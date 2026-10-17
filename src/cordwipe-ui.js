@@ -24,7 +24,7 @@ import { replaceInterpolations } from './utils/helpers';
 
 // links
 const HOME = 'https://github.com/avizmarlon/cordwipe';
-const WIKI = HOME + '/blob/codex/cordwipe-first-functional/README.md#usage';
+const WIKI = HOME + '/blob/master/README.md#usage';
 
 const cordwipeCore = new CordWipeCore();
 

@@ -793,7 +793,7 @@ body.cordwipe-pick-message.after [id^="message-content-"]:hover::after {
 
 	// links
 	const HOME = 'https://github.com/avizmarlon/cordwipe';
-	const WIKI = HOME + '/blob/codex/cordwipe-first-functional/README.md#usage';
+	const WIKI = HOME + '/blob/master/README.md#usage';
 
 	const cordwipeCore = new CordWipeCore();
 
