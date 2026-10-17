@@ -4,19 +4,17 @@ CordWipe is an open-source browser userscript for finding and deleting your own 
 
 > **Use with care.** Message deletion is irreversible. [Discord prohibits automating normal user accounts](https://support.discord.com/hc/en-us/articles/115002192352-Automated-User-Accounts-Self-Bots) and may terminate accounts that do so. You are responsible for deciding whether to use this software. CordWipe is unaffiliated with Discord.
 
-## Development build
+## Install
 
-This repository does not publish a release or userscript-manager update feed. Install the local development build yourself:
+**[Install CordWipe](https://raw.githubusercontent.com/avizmarlon/cordwipe/main/cordwipe.user.js)** (development version)
 
-1. Install a userscript manager compatible with your browser, such as [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/).
-2. Clone or download this repository and open the userscript manager's dashboard.
-3. Choose **Create a new script**, replace its editor contents with the full contents of [`cordwipe.user.js`](./cordwipe.user.js), and save with <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>Cmd</kbd>+<kbd>S</kbd> on macOS).
-4. Disable any other Undiscord or PurgeCord userscript while testing to avoid duplicate controls.
-5. Open Discord in a browser at [discord.com](https://discord.com/channels/@me), not the desktop application. CordWipe's control should appear in the channel interface or its floating fallback.
+1. Install a userscript manager such as [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/).
+2. Click **Install CordWipe** above and confirm the installation in your userscript manager.
+3. Open [Discord in your browser](https://discord.com/channels/@me). CordWipe's trash button should appear in the channel header, or as a floating fallback.
 
-The build artifact is generated from source; after changing code, run `npm run build` and install the resulting `cordwipe.user.js` again. Do not install a script from an unreviewed mirror or paste code into Discord's developer console.
+If the link displays JavaScript instead of an installation prompt, check that your userscript manager is enabled and allowed to run, or manually create a new script and paste the contents of [cordwipe.user.js](./cordwipe.user.js). Disable any other Undiscord/PurgeCord userscript to avoid duplicate controls.
 
-If the script is enabled but no control appears, check that the manager has permission to run userscripts on Discord. Tampermonkey documents this browser permission in its [userscript execution FAQ](https://www.tampermonkey.net/faq.php#Q209).
+This is an **early development build**, not a stable release. Auto-updates are disabled; install newer versions manually from this repository after reviewing the changes. No browser-store publication is available. CordWipe only runs in the Discord web app, not the desktop app.
 
 ## Usage
 
@@ -45,7 +43,7 @@ Stop cannot recall a deletion request already sent to Discord. A stopped or time
 ## Compatibility and limitations
 
 - CordWipe targets Discord's web client in a browser. The desktop application is not supported.
-- This is `0.1.0-dev.1`. On October 17, 2026, the owner confirmed with screenshots that the launcher appeared and opened the panel in Discord's web client. This validates that interface path in one environment; broader browser/userscript-manager compatibility, live authentication, search, and deletion remain unverified. Automatic tests use local fixtures and simulated responses only.
+- This is `0.1.0-dev.1`. On October 17, 2026, the maintainer confirmed the launcher and panel worked in Discord web and separately reported successfully deleting messages with CordWipe. That is a limited real-world test, not proof of reliability across all message types, browsers or accounts. Automated tests use synthetic API responses and offline browser fixtures.
 - Discord's server search is indexed and may omit messages. A completed server search means the returned matches were exhausted; it does not prove every matching server message was found.
 - DM/group-DM history is paged directly. Completion means the history available to the script was traversed to the selected lower bound; access, retention, and API behavior can limit results.
 - Discord may change its DOM, API, permissions, or rate limits without notice. Search results, message availability, and deletion permissions are controlled by Discord.
