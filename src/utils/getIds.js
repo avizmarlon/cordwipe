@@ -26,7 +26,7 @@ function fromModules(pick) {
     }
   }];
   try { chunks.push(chunk); }
-  catch { /* Unsupported client: explicit manual entry remains available. */ }
+  catch { /* An unsupported client must fail without exposing module contents. */ }
   finally {
     // Remove only our own entry; another chunk may have been appended meanwhile.
     const index = chunks.indexOf(chunk);
@@ -37,7 +37,7 @@ function fromModules(pick) {
 
 const usableToken = value => typeof value === 'string' && value.length > 0 && !value.startsWith('dQw4w9WgXcQ:');
 
-// Invoked only by an explicit Fill/Delete action, never by initialization.
+// Invoked only by Find & review after scope validation, never by initialization.
 export function getToken() {
   const stored = readStored('token');
   if (usableToken(stored)) return stored;
@@ -71,6 +71,6 @@ export function fillToken() {
     const token = getToken();
     if (token) return token;
   } catch { /* Do not expose credential-bearing errors. */ }
-  log.error('Authorization could not be detected. See the README security section.');
+  log.error('Could not access the current Discord session. Reload Discord and try again. This client version may not be supported; never copy or share your token.');
   return '';
 }

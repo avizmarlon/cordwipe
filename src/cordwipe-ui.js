@@ -24,7 +24,7 @@ import { replaceInterpolations } from './utils/helpers';
 
 // links
 const HOME = 'https://github.com/avizmarlon/cordwipe';
-const WIKI = HOME + '/blob/main/README.md#usage';
+const WIKI = HOME + '/blob/main/README.md#how-to-use';
 
 const cordwipeCore = new CordWipeCore();
 
@@ -98,7 +98,9 @@ function initUI() {
   $('button#start').onclick = startAction;
   $('button#stop').onclick = stopAction;
   $('button#clear').onclick = () => ui.logArea.innerHTML = '';
-  $('button#getAuthor').onclick = () => $('input#authorId').value = getAuthorId();
+  $('button#getAuthor').onclick = () => {
+    $('input#authorId').value = getAuthorId();
+  };
   $('button#getGuild').onclick = () => {
     const guildId = $('input#guildId').value = getGuildId();
     if (guildId === '@me') $('input#channelId').value = getChannelId();
@@ -125,8 +127,6 @@ function initUI() {
     if (id) $('input#maxId').value = id;
     toggleWindow();
   };
-  $('button#getToken').onclick = () => $('input#token').value = fillToken();
-
   for (const name of ['searchDelay', 'deleteDelay']) {
     const input = $('input#' + name);
     const sync = () => $('div#' + name + 'Value').textContent = input.value + 'ms';
@@ -170,8 +170,7 @@ function setupCordWipeCore() {
 
   cordwipeCore.onStop = (state, stats) => {
     for (const control of ui.cordwipeWindow.querySelectorAll('.sidebar input, .sidebar button')) control.disabled = false;
-    $('input#token').value = '';
-    ui.percent.textContent = `${state.status}: ${state.delCount} deleted, ${state.failCount} failed`;
+    ui.percent.textContent = `${state.status}: ${state.delCount} deleted, ${state.missingCount} already absent, ${state.failCount} failed; ${state.skippedCount} skipped`;
     $('#start').disabled = false;
     $('#stop').disabled = true;
     ui.cordwipeBtn.classList.remove('running');
@@ -201,9 +200,8 @@ async function startAction() {
   try {
     for (const channelId of channelIds) cordwipeCore.validate({ ...options, channelId, authToken: 'validation-only' });
   } catch (error) { return log.error(error.message); }
-  const authToken = read('token') || fillToken();
+  const authToken = fillToken();
   if (!authToken) return;
-  $('input#token').value = '';
   ui.logArea.textContent = '';
   cordwipeCore.resetState();
   cordwipeCore.options = { ...options, authToken };

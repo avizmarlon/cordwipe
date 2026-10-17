@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { chromeVersion } from './version.mjs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
 
@@ -32,7 +33,7 @@ export default function userScriptMetadataBlock() {
   const metadata = {
     name: pkg.nameFull,
     description: pkg.description,
-    version: process.env.VERSION,
+    version: chromeVersion(pkg.version),
     author: pkg.author,
     homepageURL: pkg.homepage,
     supportURL: pkg.bugs.url,

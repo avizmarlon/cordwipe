@@ -232,6 +232,56 @@ test('DM history deletes only own filtered messages, treats bounds as exclusive,
   assert.equal(state.skippedCount, 4);
 });
 
+test('repeated DM history page fails closed instead of counting the same message repeatedly', async () => {
+  const repeated = msg(HIGH, { guild_id: undefined });
+  let searches = 0;
+  let deletes = 0;
+  const core = makeCore(async (url, init) => {
+    const path = route(url);
+    if (path === '/users/@me') return response(200, { id: AUTHOR });
+    if (path === `/channels/${CHANNEL}`) return response(200, { id: CHANNEL, type: 1 });
+    if (path.includes('/messages?')) { searches++; return response(200, [repeated]); }
+    if (init.method === 'DELETE') { deletes++; return response(204, ''); }
+    throw new Error(path);
+  });
+  core.options = base({ guildId: '@me' });
+
+  const state = await core.run();
+
+  assert.equal(state.status, 'failed');
+  assert.equal(state.delCount, 1);
+  assert.equal(state.missingCount, 0);
+  assert.equal(searches, 2);
+  assert.equal(deletes, 1);
+});
+
+test('NSFW scope is sent to server search and shown in the deletion confirmation', async () => {
+  const requests = [];
+  const confirmations = [];
+  let searches = 0;
+  const core = makeCore(async (url, init) => {
+    const path = route(url);
+    requests.push(url);
+    if (path === '/users/@me') return response(200, { id: AUTHOR });
+    if (path.includes('/messages/search?')) return searches++ === 0
+      ? serverSearch([msg(HIGH, { content: 'https://example.test\nforged confirmation line', attachments: [{ id: 'synthetic-file' }] })])
+      : serverSearch([]);
+    if (init.method === 'DELETE') return response(204, '');
+    throw new Error(path);
+  }, { ask: async prompt => { confirmations.push(prompt); return true; } });
+  core.options = base({ includeNsfw: true, hasLink: true, hasFile: true });
+
+  const state = await core.run();
+
+  assert.equal(state.status, 'completed');
+  const query = new URL(requests.find(url => url.includes('/messages/search?'))).searchParams;
+  assert.equal(query.get('include_nsfw'), 'true');
+  assert.deepEqual(query.getAll('has'), ['link', 'file']);
+  assert.match(confirmations[0], /include NSFW: true/);
+  assert.ok(confirmations[0].includes(`${HIGH}: https://example.test forged confirmation line`));
+  assert.ok(!confirmations[0].includes('https://example.test\nforged'));
+});
+
 test('reply messages are eligible while unsupported message types are skipped', async () => {
   const deleted = [];
   let search = 0;

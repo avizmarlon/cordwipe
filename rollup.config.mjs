@@ -37,8 +37,7 @@ if (!production) {
     {
       buildStart() {
         packageJson = loadJSON('./package.json');
-        const DEV_VERSION = `0.${new Date().toISOString().replace(/[-:T]/g, '.').replace('Z', '')}-dev`;
-        process.env.VERSION = DEV_VERSION;
+        process.env.VERSION = packageJson.version;
       }
     },
 

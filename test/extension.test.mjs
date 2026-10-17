@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { unzipSync } from 'fflate';
 import { chromium } from 'playwright';
+import { chromeVersion } from '../build/version.mjs';
 
 const root = new URL('../', import.meta.url);
 const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'));
@@ -19,7 +20,11 @@ const OTHER_MESSAGE = '443333333333333333';
 
 test('MV3 manifest only targets Discord and requests no privileged extension APIs', async () => {
   assert.equal(manifest.manifest_version, 3);
+  assert.equal(manifest.minimum_chrome_version, '111');
+  assert.equal(manifest.version, chromeVersion(pkg.version));
   assert.equal(manifest.version_name, pkg.version);
+  assert.ok(manifest.description.length <= 132);
+  assert.match(manifest.description, /session.*locally.*only to Discord/);
   assert.equal(manifest.content_scripts.length, 1);
   assert.deepEqual(manifest.content_scripts[0].matches, pkg.userScript.match);
   assert.equal(manifest.content_scripts[0].world, 'MAIN');
@@ -44,7 +49,7 @@ test('ZIP installs from its root and contains exactly the built local assets', a
   }
 });
 
-test('installed MV3 extension mounts in Discord and deletes only synthetic matching messages', async t => {
+test('installed MV3 extension handles SPA entry and deletes only confirmed synthetic matching messages', async t => {
   const context = await chromium.launchPersistentContext('', {
     channel: 'chromium',
     headless: true,
@@ -64,7 +69,7 @@ test('installed MV3 extension mounts in Discord and deletes only synthetic match
     const req = route.request();
     const url = req.url();
     const u = new URL(url);
-    if (u.origin === 'https://discord.com' && u.pathname.startsWith('/channels/')) {
+    if (u.origin === 'https://discord.com' && (u.pathname.startsWith('/channels/') || u.pathname === '/app')) {
       return route.fulfill({
         contentType: 'text/html',
         headers: { 'content-security-policy': 'default-src \'self\'; script-src \'self\'; style-src \'unsafe-inline\' \'self\'; img-src \'self\' data:' },
@@ -101,17 +106,29 @@ test('installed MV3 extension mounts in Discord and deletes only synthetic match
   const page = await context.newPage();
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
-  await page.goto(`https://discord.com/channels/@me/${CHANNEL}`, { waitUntil: 'domcontentloaded' });
+  await page.goto('https://discord.com/app', { waitUntil: 'load' });
+  assert.equal(await page.locator('#cordwipe-btn').count(), 0);
+  assert.equal(seen.length, 0);
+  await page.evaluate(channel => {
+    history.pushState({}, '', `/channels/@me/${channel}`);
+    document.querySelector('#app-mount').appendChild(document.createElement('main'));
+  }, CHANNEL);
   await page.locator('#cordwipe-btn').waitFor({ state: 'visible', timeout: 15000 });
   assert.equal(await page.locator('#cordwipe-btn').count(), 1);
   assert.equal(seen.length, 0, 'Extension initialization must never call the Discord API');
   await page.locator('#cordwipe-btn').click();
   assert.equal(await page.locator('#cordwipe').isVisible(), true);
+  assert.doesNotMatch(await page.locator('#cordwipe').textContent(), /Undiscord|victornpb/);
+  assert.equal(await page.locator('#cordwipe #token').count(), 0);
+
+  // Invalid scope must fail before session retrieval or API access.
+  await page.evaluate(() => { localStorage.setItem('token', JSON.stringify('synthetic-credential')); });
+  await page.locator('#cordwipe #start').click();
+  assert.equal(seen.length, 0);
 
   await page.locator('#cordwipe #authorId').fill(AUTHOR);
   await page.locator('#cordwipe #guildId').fill('@me');
   await page.locator('#cordwipe #channelId').fill(CHANNEL);
-  await page.locator('#cordwipe #token').evaluate(input => { input.value = 'synthetic-credential'; });
   for (const id of ['searchDelay', 'deleteDelay']) {
     await page.locator(`#cordwipe #${id}`).evaluate(input => {
       input.value = '1000';
@@ -132,7 +149,8 @@ test('installed MV3 extension mounts in Discord and deletes only synthetic match
   assert.equal(previews.length, 1);
   assert.deepEqual(deletes, [`/api/v9/channels/${CHANNEL}/messages/${MESSAGE}`]);
   assert.ok(seen.some(value => value.endsWith('/users/@me')));
-  assert.equal(await page.locator('#cordwipe #token').inputValue(), '');
+  assert.equal(await page.locator('#cordwipe #token').count(), 0);
+  assert.match(await page.locator('#progressPercent').textContent(), /already absent.*failed.*skipped/);
   assert.doesNotMatch(await page.locator('#logArea').textContent(), /synthetic-credential|synthetic test message/);
   assert.deepEqual(unexpected, [], 'No external requests or unexpected API routes');
   assert.deepEqual(pageErrors, []);
