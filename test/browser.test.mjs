@@ -29,6 +29,20 @@ async function fixture(t, html = '') {
   await page.goto(`http://cordwipe.test/channels/${GUILD}/${CHANNEL}`);
   await page.evaluate(() => {
     window.calls = [];
+    window.storageReads = [];
+    const append = Node.prototype.appendChild;
+    Node.prototype.appendChild = function(node) {
+      const result = append.call(this, node);
+      if (node.nodeName === 'IFRAME') {
+        const proto = node.contentWindow.Storage.prototype;
+        const get = proto.getItem;
+        proto.getItem = function(key) {
+          window.storageReads.push(key);
+          return get.call(this, key);
+        };
+      }
+      return result;
+    };
     window.fetch = (...args) => {
       if (window.mockFetch) return window.mockFetch(...args);
       window.calls.push(args); throw new Error('Unmocked request');
@@ -41,7 +55,6 @@ async function fixture(t, html = '') {
 
 async function open(page) { await page.locator('#cordwipe-btn').click(); }
 async function fill(page) {
-  await page.locator('#cordwipe #dataConsent').check();
   await page.locator('#cordwipe #authorId').fill(AUTHOR);
   await page.locator('#cordwipe #guildId').fill(GUILD);
   await page.locator('#cordwipe #channelId').fill(CHANNEL);
@@ -67,10 +80,14 @@ test('floating fallback is visible without app root; startup never reads credent
   assert.match(await page.locator('#cordwipe-btn').getAttribute('class'), /cordwipe-floating/);
   assert.equal(await page.locator('iframe').count(), 0);
   assert.deepEqual(await page.evaluate(() => window.calls), []);
+  assert.deepEqual(await page.evaluate(() => window.storageReads), []);
   await open(page);
   assert.equal(await page.getByRole('dialog', { name: 'CordWipe' }).isVisible(), true);
   assert.doesNotMatch(await page.locator('#cordwipe').textContent(), /Undiscord|victornpb/);
   assert.equal(await page.locator('#cordwipe #token').count(), 0);
+  assert.equal(await page.locator('iframe').count(), 0);
+  assert.deepEqual(await page.evaluate(() => window.calls), []);
+  assert.deepEqual(await page.evaluate(() => window.storageReads), []);
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('#cordwipe-btn').getAttribute('aria-expanded'), 'false');
   await page.keyboard.press('Enter');
@@ -196,50 +213,58 @@ test('confirmed synthetic deletion completes through UI and counts only the matc
   assert.doesNotMatch(await page.locator('#logArea').textContent(), /fixture own|fixture other|synthetic-credential/);
 });
 
-test('revoking privacy consent cancels an active request and blocks a restart', async t => {
+test('missing session fails safely with useful guidance and no credential controls or requests', async t => {
   const page = await fixture(t);
   await open(page);
   await fill(page);
-  await page.evaluate(() => {
-    window.mockFetch = (url, options) => new Promise((resolve, reject) => {
-      window.calls.push({ url, method: options.method });
-      options.signal.addEventListener('abort', () => reject(new DOMException('Stopped', 'AbortError')), { once: true });
-    });
-  });
+  await page.evaluate(() => localStorage.removeItem('token'));
   await page.locator('#cordwipe #start').click();
-  await page.locator('#cordwipe #dataConsent').uncheck();
-  await page.waitForFunction(() => document.querySelector('#progressPercent').textContent.startsWith('stopped:'));
-  await page.locator('#cordwipe #start').click();
-  assert.equal(await page.evaluate(() => window.calls.length), 1);
-  assert.match(await page.locator('#logArea').textContent(), /Allow session and message access/);
+  assert.match(await page.locator('#logArea').textContent(), /Reload Discord and try again/);
+  assert.match(await page.locator('#logArea').textContent(), /never copy or share your token/);
+  assert.deepEqual(await page.evaluate(() => window.calls), []);
   assert.equal(await page.locator('#cordwipe #start').isEnabled(), true);
+  assert.equal(await page.locator('#cordwipe #token, #cordwipe #getToken').count(), 0);
 });
 
-test('privacy consent precedes identity/session access; no credential field exists', async t => {
+test('controls need no session checkbox; authorization is read only for a valid explicit search', async t => {
   const page = await fixture(t);
   await open(page);
+  assert.equal(await page.locator('#logArea').textContent(), '');
+  assert.equal(await page.locator('#cordwipe #dataConsent').count(), 0);
+  assert.match(await page.locator('#accessInfo').textContent(), /session and message history locally/);
+  assert.equal(await page.locator('#start').getAttribute('aria-describedby'), 'accessInfo');
+  assert.equal(await page.getByRole('link', { name: 'Privacy policy' }).getAttribute('href'), 'https://github.com/avizmarlon/cordwipe/blob/main/PRIVACY.md');
   await page.evaluate(() => {
     localStorage.setItem('token', JSON.stringify('synthetic-credential'));
     localStorage.setItem('user_id_cache', JSON.stringify('111111111111111111'));
-    window.frameReads = 0;
-    new MutationObserver(records => {
-      for (const record of records) for (const node of record.addedNodes) if (node.nodeName === 'IFRAME') window.frameReads++;
-    }).observe(document.body, { childList: true });
   });
-  await page.locator('#cordwipe #getAuthor').click();
-  await page.locator('#cordwipe #start').click();
-  assert.equal(await page.evaluate(() => window.frameReads), 0);
-  assert.equal(await page.locator('#cordwipe #authorId').inputValue(), '');
-  assert.deepEqual(await page.evaluate(() => window.calls), []);
-  assert.match(await page.locator('.data-notice').textContent(), /session authorization and message history/);
-  await page.locator('#cordwipe #dataConsent').check();
+  await page.locator('#cordwipe #getChannel').click();
+  assert.equal(await page.locator('#cordwipe #channelId').inputValue(), CHANNEL);
+  assert.equal(await page.locator('#cordwipe #guildId').inputValue(), GUILD);
+  assert.deepEqual(await page.evaluate(() => window.storageReads), []);
   await page.locator('#cordwipe #getAuthor').click();
   assert.equal(await page.locator('#cordwipe #authorId').inputValue(), AUTHOR);
-  assert.equal(await page.evaluate(() => window.frameReads), 1);
-  assert.equal(await page.locator('#cordwipe #token, #cordwipe #getToken').count(), 0);
-  assert.equal(await page.locator('iframe').count(), 0);
-  assert.doesNotMatch(await page.locator('#logArea').textContent(), /synthetic-credential/);
+  assert.deepEqual(await page.evaluate(() => window.storageReads), ['user_id_cache']);
+  await page.locator('#cordwipe #pattern').evaluate(el => { el.value = '['; });
+  await page.locator('#cordwipe #start').click();
+  assert.match(await page.locator('#logArea').textContent(), /Invalid regular expression/);
+  assert.deepEqual(await page.evaluate(() => window.storageReads), ['user_id_cache']);
   assert.deepEqual(await page.evaluate(() => window.calls), []);
+  await page.locator('#cordwipe #pattern').evaluate(el => { el.value = ''; });
+  await page.evaluate(() => {
+    window.mockFetch = async (url, options) => {
+      window.calls.push({ method: options.method, authorization: options.headers.Authorization });
+      return Response.json({ message: 'synthetic-credential must not appear in logs' }, { status: 401 });
+    };
+  });
+  await page.locator('#cordwipe #start').click();
+  await page.waitForFunction(() => document.querySelector('#progressPercent').textContent.startsWith('failed:'));
+  assert.deepEqual(await page.evaluate(() => window.storageReads), ['user_id_cache', 'token']);
+  assert.deepEqual(await page.evaluate(() => window.calls), [{ method: 'GET', authorization: 'synthetic-credential' }]);
+  assert.match(await page.locator('#logArea').textContent(), /HTTP 401.*Reload Discord/);
+  assert.doesNotMatch(await page.locator('#cordwipe').innerHTML(), /synthetic-credential/);
+  assert.equal(await page.locator('#cordwipe #start').isEnabled(), true);
+  assert.equal(await page.locator('iframe').count(), 0);
 });
 
 test('webpack fallback removes only its own chunk and does not dispatch beforeunload', async t => {

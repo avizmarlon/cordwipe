@@ -241,6 +241,9 @@ export default class CordWipeCore {
         this._controller.signal.removeEventListener('abort', cancel);
       }
       this.checkRunning();
+      if (response.status === 401) {
+        throw new Error('Discord rejected the current session (HTTP 401). Reload Discord and try again. Never copy or share your token.');
+      }
       const limited = response.status === 429;
       const indexing = response.status === 202 && method === 'GET';
       if (body?.code === 40333 || (limited && !body)) {

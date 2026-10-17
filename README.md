@@ -1,5 +1,7 @@
 # CordWipe
 
+[![Get it on Greasy Fork](https://img.shields.io/badge/Get_it_on-Greasy_Fork-670000)](https://greasyfork.org/en/scripts/600774-cordwipe)
+
 **Delete your own Discord messages in bulk.** Free, open source, and based on [Undiscord](https://github.com/victornpb/undiscord).
 
 Use CordWipe in Discord's web app to clear messages from DMs, group DMs, channels, or servers. Choose what to delete, apply filters if you want, and confirm before anything is removed.
@@ -10,12 +12,14 @@ Use CordWipe in Discord's web app to clear messages from DMs, group DMs, channel
 
 No Tampermonkey or Violentmonkey needed.
 
-1. Sign in to GitHub, open the latest successful **[CordWipe build on main](https://github.com/avizmarlon/cordwipe/actions/workflows/test.yml?query=branch%3Amain)**, and download the extension ZIP under **Artifacts**. Extract it.
+1. **[Download the public preview ZIP — v0.1.0-dev.1](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.1/cordwipe-extension-v0.1.0-dev.1.zip)** and extract it. No GitHub login is needed.
 2. Open `chrome://extensions` (or `edge://extensions` in Edge).
 3. Turn on **Developer mode**, choose **Load unpacked**, and select the extracted folder containing `manifest.json`.
 4. Open [Discord in your browser](https://discord.com/channels/@me).
 
-The extension is currently distributed as a preview ZIP. To update it, download the newer ZIP, replace the extracted files, and reload the extension. If no current download is available, use the userscript below.
+The extension is currently distributed through [GitHub Releases](https://github.com/avizmarlon/cordwipe/releases). To update it, download the newer ZIP, replace the extracted files, and reload the extension and Discord page.
+
+**Public preview:** `0.1.0-dev.1`. The newer candidate in [PR #7](https://github.com/avizmarlon/cordwipe/pull/7) is still under review and is not included in that download. The usage and privacy behavior below describe the candidate; the public preview uses the older interface. No new release has been approved yet.
 
 ### Userscript — Firefox, Chrome, Edge, and others
 
@@ -28,9 +32,9 @@ Disable other Undiscord/CordWipe scripts or extensions to avoid duplicate button
 ## How to use
 
 1. Open the DM or channel you want to clean and click the **trash icon**.
-2. Read the privacy notice and allow access for this page session. Click **me** for your author ID, then **current** for the server or channel. To search a whole server, leave the channel field empty.
+2. Click **me** to read your account ID, then **current** for the server or channel. You can also enter IDs manually. To search a whole server, leave the channel field empty.
 3. Optionally filter by text, regex, attachments, links, pinned messages, or date/message range.
-4. Click **Delete**, check the preview, and confirm.
+4. Click **Find & review** to use your Discord session to search the selected scope. Check the preview and confirm deletion. Nothing is deleted before confirmation. The public preview labels this button **Delete**.
 
 CordWipe deletes **only messages from your signed-in account**. It supports one channel, multiple channels, or a whole server, and shows progress as it works. **Stop** cancels further work; a request already sent may still complete.
 
@@ -43,7 +47,7 @@ CordWipe deletes **only messages from your signed-in account**. It supports one 
 - Server searches depend on Discord's search index and can miss messages. Only ordinary messages and replies are supported; pinned messages are excluded unless selected.
 - Use simple, trusted regular expressions. Complex patterns can freeze the page; a literal text filter is safer when it fits your search.
 
-CordWipe processes session authorization and messages locally and sends requests only to Discord. It has no analytics or backend. It shares Discord's page environment, so other page scripts can interfere with it. Never copy or share your token. Read the [privacy policy](PRIVACY.md) before allowing access.
+CordWipe processes session authorization and messages locally and sends requests only to Discord. It has no analytics or backend. Opening the panel does not retrieve authorization or message history; **Find & review** retrieves authorization only after validating your inputs. There is no token field or extra session checkbox. It shares Discord's page environment, so other page scripts can interfere with it. Never copy or share your token. Read the [privacy policy](PRIVACY.md) before use.
 
 Found a bug or have an idea? [Open an issue](https://github.com/avizmarlon/cordwipe/issues).
 

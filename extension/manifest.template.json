@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "minimum_chrome_version": "111",
   "name": "CordWipe",
-  "description": "Find and delete your own Discord messages with explicit scope and confirmation.",
+  "description": "Find and delete your own Discord messages using your session. Processed locally; requests only to Discord. Confirm before deletion.",
   "content_scripts": [
     {
       "matches": [

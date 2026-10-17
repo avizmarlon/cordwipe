@@ -2,6 +2,6 @@
 
 CordWipe does not ask you to copy an authorization token from DevTools. Never paste a Discord token into a chat, issue, screenshot, or third-party website. Tokens grant access to your account.
 
-After you allow access in the privacy notice, **Delete** retrieves authorization temporarily for that run. There is no token input or copy button. You can inspect the panel without allowing access. Review the source before installing and do not use unreviewed scripts or console-paste instructions.
+**Find & review** retrieves authorization temporarily for that run, after validating your inputs. Opening or configuring the panel does not retrieve it. There is no token input or copy button and no extra session acceptance checkbox. If session access fails or Discord rejects authentication, reload Discord and try again; never copy credentials as a workaround. Review the source before installing and do not use unreviewed scripts or console-paste instructions.
 
 See the [privacy policy](../PRIVACY.md).

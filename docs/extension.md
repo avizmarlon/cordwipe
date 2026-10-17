@@ -1,15 +1,17 @@
 # CordWipe browser extension
 
-CordWipe runs in Discord's web app on Chrome and Edge 111 or later. It is not yet listed in an extension store. Read the [privacy policy](../PRIVACY.md) before allowing access in the panel.
+CordWipe runs in Discord's web app on Chrome and Edge 111 or later. It is not yet listed in an extension store. Read the [privacy policy](../PRIVACY.md) before use.
 
 ## Install the ZIP
 
-1. Sign in to GitHub and open the latest successful [main build](https://github.com/avizmarlon/cordwipe/actions/workflows/test.yml?query=branch%3Amain). Download the extension ZIP under **Artifacts** and extract it to a folder you'll keep. Downloads expire after 30 days; building from source remains available.
+1. Download the [public preview ZIP, v0.1.0-dev.1](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.1/cordwipe-extension-v0.1.0-dev.1.zip) from [GitHub Releases](https://github.com/avizmarlon/cordwipe/releases) and extract it to a folder you'll keep. No GitHub login is needed.
 2. Open `chrome://extensions` or `edge://extensions`.
 3. Enable **Developer mode** and click **Load unpacked**.
 4. Choose the folder containing `manifest.json` and open Discord.
 
-To update, replace the extracted files with a newer version and click **Reload** on the browser's Extensions page.
+To update, replace the extracted files with a newer version, click **Reload** on the browser's Extensions page, and reload Discord.
+
+The newer candidate in [PR #7](https://github.com/avizmarlon/cordwipe/pull/7) is under review and has not been released. The public ZIP still contains the older interface. To test an unreleased candidate, build its branch from source below; public installation does not depend on temporary CI artifacts.
 
 ## Build from source
 

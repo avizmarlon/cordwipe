@@ -37,7 +37,7 @@ function fromModules(pick) {
 
 const usableToken = value => typeof value === 'string' && value.length > 0 && !value.startsWith('dQw4w9WgXcQ:');
 
-// Invoked only by a consented Delete action, never by initialization.
+// Invoked only by Find & review after scope validation, never by initialization.
 export function getToken() {
   const stored = readStored('token');
   if (usableToken(stored)) return stored;

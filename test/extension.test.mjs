@@ -23,6 +23,8 @@ test('MV3 manifest only targets Discord and requests no privileged extension API
   assert.equal(manifest.minimum_chrome_version, '111');
   assert.equal(manifest.version, chromeVersion(pkg.version));
   assert.equal(manifest.version_name, pkg.version);
+  assert.ok(manifest.description.length <= 132);
+  assert.match(manifest.description, /session.*locally.*only to Discord/);
   assert.equal(manifest.content_scripts.length, 1);
   assert.deepEqual(manifest.content_scripts[0].matches, pkg.userScript.match);
   assert.equal(manifest.content_scripts[0].world, 'MAIN');
@@ -47,7 +49,7 @@ test('ZIP installs from its root and contains exactly the built local assets', a
   }
 });
 
-test('installed MV3 extension handles SPA entry and deletes only consented synthetic matching messages', async t => {
+test('installed MV3 extension handles SPA entry and deletes only confirmed synthetic matching messages', async t => {
   const context = await chromium.launchPersistentContext('', {
     channel: 'chromium',
     headless: true,
@@ -119,11 +121,10 @@ test('installed MV3 extension handles SPA entry and deletes only consented synth
   assert.doesNotMatch(await page.locator('#cordwipe').textContent(), /Undiscord|victornpb/);
   assert.equal(await page.locator('#cordwipe #token').count(), 0);
 
-  // With a session available, Delete still cannot read it or call APIs before consent.
+  // Invalid scope must fail before session retrieval or API access.
   await page.evaluate(() => { localStorage.setItem('token', JSON.stringify('synthetic-credential')); });
   await page.locator('#cordwipe #start').click();
   assert.equal(seen.length, 0);
-  await page.locator('#cordwipe #dataConsent').check();
 
   await page.locator('#cordwipe #authorId').fill(AUTHOR);
   await page.locator('#cordwipe #guildId').fill('@me');

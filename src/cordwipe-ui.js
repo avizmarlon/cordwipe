@@ -41,11 +41,6 @@ const ui = {
   percent: null,
 };
 const $ = s => ui.cordwipeWindow.querySelector(s);
-const hasConsent = () => {
-  if ($('#dataConsent').checked) return true;
-  log.warn('Allow session and message access in the privacy notice before using CordWipe.');
-  return false;
-};
 
 function initUI() {
   if (document.getElementById('cordwipe')) return;
@@ -100,22 +95,17 @@ function initUI() {
     if (e.key === 'Escape' && ui.cordwipeWindow.style.display !== 'none') toggleWindow();
   });
   $('#toggleSidebar').onclick = ()=> ui.cordwipeWindow.classList.toggle('hide-sidebar');
-  $('#dataConsent').onchange = () => {
-    if (!$('#dataConsent').checked && (cordwipeCore._active || cordwipeCore._batchActive)) cordwipeCore.stop();
-  };
   $('button#start').onclick = startAction;
   $('button#stop').onclick = stopAction;
   $('button#clear').onclick = () => ui.logArea.innerHTML = '';
   $('button#getAuthor').onclick = () => {
-    if (hasConsent()) $('input#authorId').value = getAuthorId();
+    $('input#authorId').value = getAuthorId();
   };
   $('button#getGuild').onclick = () => {
-    if (!hasConsent()) return;
     const guildId = $('input#guildId').value = getGuildId();
     if (guildId === '@me') $('input#channelId').value = getChannelId();
   };
   $('button#getChannel').onclick = () => {
-    if (!hasConsent()) return;
     $('input#channelId').value = getChannelId();
     $('input#guildId').value = getGuildId();
   };
@@ -124,7 +114,6 @@ function initUI() {
     if (b) alert('This mode will attempt to hide personal information, so you can screen share / take screenshots.\nAlways double check you are not sharing sensitive information!');
   };
   $('#pickMessageAfter').onclick = async () => {
-    if (!hasConsent()) return;
     alert('Select the exclusive lower message boundary. Press Escape to cancel.');
     toggleWindow();
     const id = await messagePicker.grab('after');
@@ -132,7 +121,6 @@ function initUI() {
     toggleWindow();
   };
   $('#pickMessageBefore').onclick = async () => {
-    if (!hasConsent()) return;
     alert('Select the exclusive upper message boundary. Press Escape to cancel.');
     toggleWindow();
     const id = await messagePicker.grab('before');
@@ -193,7 +181,6 @@ function setupCordWipeCore() {
 
 async function startAction() {
   if (cordwipeCore._active || cordwipeCore._batchActive) return;
-  if (!hasConsent()) return;
   const read = id => $('#' + id).value.trim();
   const checked = id => $('#' + id).checked;
   const channelIds = [...new Set(read('channelId').split(/\s*,\s*/))];
