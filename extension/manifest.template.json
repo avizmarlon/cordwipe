@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "CordWipe (Development)",
+  "name": "CordWipe",
   "description": "Find and delete your own Discord messages with explicit scope and confirmation.",
   "content_scripts": [
     {

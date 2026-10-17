@@ -45,9 +45,9 @@ async function fill(page) {
   await page.locator('#cordwipe #token').evaluate(el => { el.value = 'synthetic-credential'; });
 }
 
-test('development installer has CordWipe identity, retained license and no update feed', () => {
+test('userscript has CordWipe identity, retained license and no external update feed', () => {
   const metadata = script.split('// ==/UserScript==')[0];
-  assert.match(metadata, /@name\s+CordWipe \[Development\]/);
+  assert.match(metadata, /@name\s+CordWipe\r?\n/);
   assert.match(metadata, /@namespace\s+https:\/\/github.com\/avizmarlon\/cordwipe/);
   assert.match(metadata, /@version\s+0\.1\.0-dev\.1/);
   assert.match(metadata, /@updateURL\s+none/);
