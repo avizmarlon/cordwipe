@@ -1,17 +1,17 @@
 import insertCss from './insertCss';
 
 const messagePickerCss = `
-body.undiscord-pick-message [data-list-id="chat-messages"] {
+body.cordwipe-pick-message [data-list-id="chat-messages"] {
   background-color: var(--background-secondary-alt);
   box-shadow: inset 0 0 0px 2px var(--button-outline-brand-border);
 }
 
-body.undiscord-pick-message [id^="message-content-"]:hover {
+body.cordwipe-pick-message [id^="message-content-"]:hover {
   cursor: pointer;
   cursor: cell;
   background: var(--background-message-automod-hover);
 }
-body.undiscord-pick-message [id^="message-content-"]:hover::after {
+body.cordwipe-pick-message [id^="message-content-"]:hover::after {
   position: absolute;
   top: calc(50% - 11px);
   left: 4px;
@@ -29,10 +29,10 @@ body.undiscord-pick-message [id^="message-content-"]:hover::after {
   border-radius: 3px;
   content: 'This 👉';
 }
-body.undiscord-pick-message.before [id^="message-content-"]:hover::after {
+body.cordwipe-pick-message.before [id^="message-content-"]:hover::after {
   content: 'Before 👆';
 }
-body.undiscord-pick-message.after [id^="message-content-"]:hover::after {
+body.cordwipe-pick-message.after [id^="message-content-"]:hover::after {
   content: 'After 👇';
 }
 `;
@@ -42,18 +42,25 @@ const messagePicker = {
     insertCss(messagePickerCss);
   },
   grab(auxiliary) {
-    return new Promise((resolve, reject) => {
-      document.body.classList.add('undiscord-pick-message');
+    return new Promise(resolve => {
+      document.body.classList.add('cordwipe-pick-message');
       if (auxiliary) document.body.classList.add(auxiliary);
+      function cleanup() {
+        if (auxiliary) document.body.classList.remove(auxiliary);
+        document.body.classList.remove('cordwipe-pick-message');
+        document.removeEventListener('click', clickHandler, true);
+        document.removeEventListener('keydown', keyHandler, true);
+      }
+      function keyHandler(e) {
+        if (e.key === 'Escape') { e.stopPropagation(); cleanup(); resolve(null); }
+      }
       function clickHandler(e) {
         const message = e.target.closest('[id^="message-content-"]');
         if (message) {
           e.preventDefault();
           e.stopPropagation();
           e.stopImmediatePropagation();
-          if (auxiliary) document.body.classList.remove(auxiliary);
-          document.body.classList.remove('undiscord-pick-message');
-          document.removeEventListener('click', clickHandler);
+          cleanup();
           try {
             resolve(message.id.match(/message-content-(\d+)/)[1]);
           } catch (e) {
@@ -61,10 +68,10 @@ const messagePicker = {
           }
         }
       }
-      document.addEventListener('click', clickHandler);
+      document.addEventListener('click', clickHandler, true);
+      document.addEventListener('keydown', keyHandler, true);
     });
   }
 };
 
 export default messagePicker;
-window.messagePicker = messagePicker;

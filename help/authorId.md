@@ -1,18 +1,5 @@
-# authorId
+# Author filter
 
-## The easy way
+CordWipe is intended to delete only messages authored by the signed-in user. The **me** control fills the current user's ID; the run verifies that identity when it starts. Do not broaden the author scope or assume Discord will allow deleting messages from other people.
 
- - Just click **Me** button next to "Author" in the popup window, 
-   it should auto detect your ID.
-
-
-## The manual way
-- Right click your **avatar** in a message you sent in the chat, [Copy ID](./developerMode.md)  
-  <img src="https://media.giphy.com/media/YnNTRqKRxVcjOuyFps/giphy.gif">  
-  NOT THE MESSAGE THE AVATAR.  
-  (You cannot delete the other's person messages a in DM channel, you will get Error 403)
-
-
------
-
-> If the `Copy ID` doesn't show up, you need to enable [Developer mode](./developerMode.md) first.
+See [current functionality](../README.md#current-functionality).

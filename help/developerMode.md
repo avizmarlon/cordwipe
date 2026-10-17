@@ -1,7 +1,5 @@
-# Developer Mode
+# Finding IDs
 
-If the `Copy ID` menu doesn't show up when right clicking:  
- - Enable developer mode in discord
-   Go to user **Settings** > **Appearance** in discord and enable **Developer mode**. 
+CordWipe's **me** and **current** controls should fill the current account, server, or channel where available. If an ID must be entered manually, Discord's **Developer Mode** setting exposes **Copy ID** in context menus. Do not copy or share an authorization token.
 
-   <img src="https://user-images.githubusercontent.com/3372598/58374693-fa3df400-7f31-11e9-9abd-ba17b9440326.png" width="100%"> 
+See [target scope](./channelId.md) and [author filter](./authorId.md).

@@ -1,47 +1,49 @@
 {
-  "name": "undiscord",
-  "nameFull": "Undiscord",
-  "version": "5.2.6",
-  "description": "Delete all messages in a Discord channel or DM (Bulk deletion)",
+  "name": "cordwipe",
+  "nameFull": "CordWipe [Development]",
+  "version": "0.1.0-dev.1",
+  "description": "Delete your own matching Discord messages with explicit scope and confirmation.",
   "userScript": {
-    "namespace": "https://github.com/victornpb/deleteDiscordMessages",
+    "namespace": "https://github.com/avizmarlon/cordwipe",
     "match": [
-      "https://*.discord.com/app",
-      "https://*.discord.com/channels/*",
-      "https://*.discord.com/login"
+      "https://discord.com/channels/*",
+      "https://ptb.discord.com/channels/*",
+      "https://canary.discord.com/channels/*"
     ],
-    "icon": "https://victornpb.github.io/undiscord/images/icon128.png",
-    "downloadURL": "https://raw.githubusercontent.com/victornpb/undiscord/master/deleteDiscordMessages.user.js",
-    "contributionURL": "https://www.buymeacoffee.com/vitim",
+    "run-at": "document-idle",
     "grant": "none",
-    "attribution": "Original project (https://github.com/victornpb/undiscord)"
+    "updateURL": "none",
+    "attribution": "Derived from Undiscord by victornpb and contributors (https://github.com/victornpb/undiscord)"
   },
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/victornpb/undiscord.git"
+    "url": "git+https://github.com/avizmarlon/cordwipe.git"
   },
   "bugs": {
-    "url": "https://github.com/victornpb/undiscord/discussions"
+    "url": "https://github.com/avizmarlon/cordwipe/issues"
   },
-  "homepage": "https://github.com/victornpb/undiscord",
-  "author": "victornpb",
-  "main": "deleteDiscordMessages.user.js",
+  "homepage": "https://github.com/avizmarlon/cordwipe",
+  "author": "CordWipe contributors",
+  "main": "cordwipe.user.js",
   "scripts": {
     "start": "npm run watch",
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "prebuild": "rimraf dist",
-    "test": "npm run lint && npm run build",
-    "lint": "eslint src",
+    "test": "npm run lint && npm run test:unit && npm run build && npm run test:browser",
+    "lint": "eslint src test build rollup.config.mjs --ext .js,.mjs",
     "lint:fix": "eslint src --fix",
-    "version": "npm run build"
+    "version": "npm run build",
+    "test:unit": "node --test test/core.test.mjs",
+    "test:browser": "node --test test/browser.test.mjs"
   },
   "files": [
-    "dist"
+    "cordwipe.user.js",
+    "LICENSE",
+    "README.md"
   ],
   "keywords": [
     "delete",
@@ -54,24 +56,19 @@
   ],
   "devDependencies": {
     "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/pluginutils": "^5.4.0",
     "eslint": "^8.36.0",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.0",
-    "rimraf": "^4.4.1",
+    "playwright": "^1.61.1",
     "rollup": "^3.20.2",
     "rollup-plugin-baked-env": "^1.0.1",
     "rollup-plugin-banner2": "^1.2.2",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-serve": "^2.0.2",
     "tiny-dedent": "^1.0.2"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**.js": "npm run lint"
-  }
+  "type": "module",
+  "private": true,
+  "contributors": [
+    "victornpb and Undiscord contributors"
+  ]
 }
