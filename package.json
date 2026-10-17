@@ -1,18 +1,19 @@
 {
   "name": "cordwipe",
   "nameFull": "CordWipe",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "description": "Delete your own Discord messages in bulk, in DMs, channels, and servers.",
   "userScript": {
     "namespace": "https://github.com/avizmarlon/cordwipe",
     "match": [
-      "https://discord.com/channels/*",
-      "https://ptb.discord.com/channels/*",
-      "https://canary.discord.com/channels/*"
+      "https://discord.com/*",
+      "https://ptb.discord.com/*",
+      "https://canary.discord.com/*"
     ],
     "run-at": "document-idle",
     "grant": "none",
-    "updateURL": "none",
+    "updateURL": "https://raw.githubusercontent.com/avizmarlon/cordwipe/main/cordwipe.user.js",
+    "downloadURL": "https://raw.githubusercontent.com/avizmarlon/cordwipe/main/cordwipe.user.js",
     "attribution": "Derived from Undiscord by victornpb and contributors (https://github.com/victornpb/undiscord)"
   },
   "license": "MIT",
@@ -31,13 +32,13 @@
   "main": "cordwipe.user.js",
   "scripts": {
     "start": "npm run watch",
-    "build": "rollup -c",
-    "watch": "rollup -c -w",
+    "build": "node build/version.mjs && rollup -c",
+    "watch": "node build/version.mjs && rollup -c -w",
     "test": "npm run lint && npm run test:unit && npm run build && npm run test:browser && npm run build:extension && npm run test:extension",
     "lint": "eslint src test build rollup.config.mjs --ext .js,.mjs",
     "lint:fix": "eslint src --fix",
-    "version": "npm run build",
-    "test:unit": "node --test test/core.test.mjs test/build.test.mjs",
+    "test:unit": "node --test test/core.test.mjs test/build.test.mjs test/version.test.mjs",
+    "check:version": "node build/version.mjs --check",
     "test:browser": "node --test test/browser.test.mjs",
     "build:extension": "npm run build && node build/extension.mjs && node build/package-extension.mjs",
     "test:extension": "node --test test/extension.test.mjs"

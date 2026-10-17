@@ -98,6 +98,9 @@ export default class CordWipeCore {
         this.checkRunning();
         this.state.grandTotal = Math.max(this.state.grandTotal, total || 0);
         if (!messages.length) break;
+        // Apply the same progress guard to DM history as server search. The API's
+        // `before` cursor is a request hint; never trust a repeated or malformed
+        // page enough to delete from it or loop through it again.
         if (messages.some(m => !isId(m?.id) || BigInt(m.id) >= BigInt(cursor))) {
           throw new Error('Pagination did not advance. Stopped to avoid repeating a page.');
         }
@@ -108,11 +111,11 @@ export default class CordWipeCore {
         this.state.skippedCount += unique.length - matches.length;
         if (matches.length && !confirmed) {
           const target = options.guildId === '@me' ? `DM ${options.channelId}` : `server ${options.guildId}, channel ${options.channelId || 'ALL'}`;
-          const preview = matches.slice(0, 5).map(m => `${m.id}: ${(m.content || '[attachment]').slice(0, 180)}`).join('\n');
+          const preview = matches.slice(0, 5).map(m => `${m.id}: ${(m.content || '[attachment]').replace(/\s+/g, ' ').slice(0, 180)}`).join('\n');
           confirmed = await this.ask(`Permanently delete your matching messages in ${target}?\n` +
             `Text: ${options.content || '(any)'}; pattern: ${options.pattern || '(none)'}\n` +
             `After: ${options.minId || '(any)'}; before: ${upperBound}\n` +
-            `Links: ${!!options.hasLink}; files: ${!!options.hasFile}; include pinned: ${!!options.includePinned}\n` +
+            `Links: ${!!options.hasLink}; files: ${!!options.hasFile}; include pinned: ${!!options.includePinned}; include NSFW: ${!!options.includeNsfw}\n` +
             'There is no undo. Preview of the first matching page (not a final count):\n' + preview);
           this.checkRunning();
           if (!confirmed) { this.stop(); break; }

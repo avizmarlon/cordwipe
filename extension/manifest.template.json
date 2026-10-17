@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
+  "minimum_chrome_version": "111",
   "name": "CordWipe",
   "description": "Find and delete your own Discord messages with explicit scope and confirmation.",
   "content_scripts": [
     {
       "matches": [
-        "https://discord.com/channels/*",
-        "https://ptb.discord.com/channels/*",
-        "https://canary.discord.com/channels/*"
+        "https://discord.com/*",
+        "https://ptb.discord.com/*",
+        "https://canary.discord.com/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle",

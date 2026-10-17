@@ -193,6 +193,18 @@
     padding-left: 8px;
 }
 
+#cordwipe .data-notice {
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    background: var(--background-secondary);
+}
+
+#cordwipe .data-notice label {
+    display: block;
+    margin-top: 6px;
+}
+
 #cordwipe legend a {
     float: right;
     text-transform: initial;

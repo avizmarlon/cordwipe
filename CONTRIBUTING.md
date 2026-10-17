@@ -14,10 +14,16 @@ npm test
 
 The build output is `cordwipe.user.js`. Do not hand-edit the generated bundle; change source files and rebuild. Tests must use mocks or local fixtures. Never use a real Discord account, capture an authorization value, or delete real messages for development or CI.
 
+## Versioning
+
+`package.json` is the sole version source. `npm run build` and `npm run build:extension` advance it once per branch when distributable files differ from `main`; repeated builds are idempotent and documentation-only changes need no increment. Use `X.Y.Z-dev.N` during development and `X.Y.Z` for a stable version. The build maps development sequence `N` to the fourth numeric userscript and Chrome version component, and reserves `65535` for the stable version, keeping Greasy Fork and Chrome updates ordered. Start a new branch after merging so its build advances from the latest `main` version.
+
+Commit the updated package, lockfile and generated userscript together. CI rejects an insufficient version or stale bundle; update a branch from `main` and rebuild if another change has advanced the version first. The [Greasy Fork listing](https://greasyfork.org/en/scripts/600774-cordwipe) must use its built-in automatic source sync with `https://raw.githubusercontent.com/avizmarlon/cordwipe/main/cordwipe.user.js`; metadata update URLs only configure direct userscript installs. Store submission remains a separate maintainer action.
+
 ## Safety expectations
 
 - Keep authorization and message content out of logs, fixtures, screenshots, commits, and issue reports.
-- Do not add credential exfiltration, persistence, telemetry, remote code, or automatic update/download URLs.
+- Do not add credential exfiltration, persistence, telemetry, or remote code. Keep userscript update/download URLs limited to the project-owned raw `main` bundle configured in `package.json`.
 - Preserve explicit author, channel/server scope, and user-selected filters through search and deletion. Fail closed if a result cannot be validated.
 - Respect Discord rate limits and stop or report errors rather than attempting to bypass platform controls.
 - Keep the UI understandable about what was found, what succeeded, what failed, and what remains after stopping.

@@ -94,7 +94,7 @@
                         <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="sectionDescription">
-                        Case-insensitive regular expression; invalid patterns stop the run
+                        Case-insensitive regular expression. Use simple patterns; complex expressions can freeze the page.
                     </div>
                     <div class="input-wrapper">
                         <span class="info">/</span>
@@ -180,28 +180,19 @@
                         Use the help link for more information.
                     </div>
                 </fieldset>
-                <hr>
-                <fieldset>
-                    <legend>
-                        Authorization Token
-                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="multiInput">
-                        <div class="input-wrapper">
-                            <input class="input" id="token" type="password" autocomplete="off" spellcheck="false" priv>
-                        </div>
-                        <button id="getToken">fill</button>
-                    </div>
-                </fieldset>
             </details>
             <hr>
             <div></div>
             <div class="info">
                 CordWipe {{VERSION}}
-                <br> Based on Undiscord by victornpb and contributors
             </div>
         </div>
         <div class="main col">
+            <div class="data-notice">
+                CordWipe reads your Discord account ID, session authorization and message history to find and delete your own messages. Data is processed in this browser and sent only to Discord; there is no CordWipe server or analytics.
+                <a href="{{HOME}}/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy policy</a>
+                <label><input id="dataConsent" type="checkbox"> I allow this access for this page session.</label>
+            </div>
             <div class="tbar col">
                 <div class="row">
                     <button id="toggleSidebar" class="sizeMedium icon">☰</button>

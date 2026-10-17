@@ -2,8 +2,10 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile, mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
+import { chromeVersion } from '../build/version.mjs';
 
 const script = await readFile(new URL('../cordwipe.user.js', import.meta.url), 'utf8');
+const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 const AUTHOR = '111111111111111111';
 const GUILD = '222222222222222222';
 const CHANNEL = '333333333333333333';
@@ -39,19 +41,22 @@ async function fixture(t, html = '') {
 
 async function open(page) { await page.locator('#cordwipe-btn').click(); }
 async function fill(page) {
+  await page.locator('#cordwipe #dataConsent').check();
   await page.locator('#cordwipe #authorId').fill(AUTHOR);
   await page.locator('#cordwipe #guildId').fill(GUILD);
   await page.locator('#cordwipe #channelId').fill(CHANNEL);
-  await page.locator('#cordwipe #token').evaluate(el => { el.value = 'synthetic-credential'; });
+  await page.evaluate(() => { localStorage.setItem('token', JSON.stringify('synthetic-credential')); });
 }
 
-test('userscript has CordWipe identity, retained license and no external update feed', () => {
+test('userscript has CordWipe identity, retained license and only the project update feed', () => {
   const metadata = script.split('// ==/UserScript==')[0];
   assert.match(metadata, /@name\s+CordWipe\r?\n/);
   assert.match(metadata, /@namespace\s+https:\/\/github.com\/avizmarlon\/cordwipe/);
-  assert.match(metadata, /@version\s+0\.1\.0-dev\.1/);
-  assert.match(metadata, /@updateURL\s+none/);
-  assert.doesNotMatch(metadata, /@downloadURL|@contributionURL|@require/);
+  assert.equal(metadata.match(/@version\s+(\S+)/)[1], chromeVersion(pkg.version));
+  for (const key of ['updateURL', 'downloadURL']) {
+    assert.equal(metadata.match(new RegExp(`@${key}\\s+(\\S+)`))[1], 'https://raw.githubusercontent.com/avizmarlon/cordwipe/main/cordwipe.user.js');
+  }
+  assert.doesNotMatch(metadata, /@contributionURL|@require/);
   assert.match(script, /Copyright \(c\) 2019-2025 Victornpb and contributors/);
   assert.match(script, /Derivatives must keep attribution comments/);
 });
@@ -64,6 +69,8 @@ test('floating fallback is visible without app root; startup never reads credent
   assert.deepEqual(await page.evaluate(() => window.calls), []);
   await open(page);
   assert.equal(await page.getByRole('dialog', { name: 'CordWipe' }).isVisible(), true);
+  assert.doesNotMatch(await page.locator('#cordwipe').textContent(), /Undiscord|victornpb/);
+  assert.equal(await page.locator('#cordwipe #token').count(), 0);
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('#cordwipe-btn').getAttribute('aria-expanded'), 'false');
   await page.keyboard.press('Enter');
@@ -136,7 +143,7 @@ test('cancelling preview prevents DELETE, restores controls, and keeps synthetic
   await page.waitForFunction(() => document.querySelector('#progressPercent').textContent.startsWith('stopped:'));
   assert.equal(await page.locator('#cordwipe #start').isEnabled(), true);
   assert.equal(await page.locator('#cordwipe #stop').isEnabled(), false);
-  assert.equal(await page.locator('#cordwipe #token').inputValue(), '');
+  assert.equal(await page.locator('#cordwipe #token').count(), 0);
   assert.equal(await page.evaluate(() => window.calls.some(c => c.method === 'DELETE')), false);
   assert.doesNotMatch(await page.locator('#logArea').textContent(), /synthetic secret|synthetic-credential/);
   assert.equal(await page.evaluate(() => window.injected), undefined);
@@ -185,17 +192,51 @@ test('confirmed synthetic deletion completes through UI and counts only the matc
   assert.equal(deleted.length, 1);
   assert.match(deleted[0].url, /444444444444444444$/);
   assert.equal(await page.locator('#cordwipe #start').isEnabled(), true);
-  assert.equal(await page.locator('#cordwipe #token').inputValue(), '');
+  assert.equal(await page.locator('#cordwipe #token').count(), 0);
   assert.doesNotMatch(await page.locator('#logArea').textContent(), /fixture own|fixture other|synthetic-credential/);
 });
 
-test('explicit token Fill cleans up its iframe; synthetic credentials are never logged', async t => {
+test('revoking privacy consent cancels an active request and blocks a restart', async t => {
   const page = await fixture(t);
   await open(page);
-  await page.evaluate(() => { localStorage.setItem('token', JSON.stringify('synthetic-credential')); });
-  await page.locator('#cordwipe #getToken').evaluate(el => el.click());
-  assert.equal(await page.locator('#cordwipe #token').inputValue(), 'synthetic-credential');
-  assert.equal(await page.locator('#cordwipe #token').getAttribute('type'), 'password');
+  await fill(page);
+  await page.evaluate(() => {
+    window.mockFetch = (url, options) => new Promise((resolve, reject) => {
+      window.calls.push({ url, method: options.method });
+      options.signal.addEventListener('abort', () => reject(new DOMException('Stopped', 'AbortError')), { once: true });
+    });
+  });
+  await page.locator('#cordwipe #start').click();
+  await page.locator('#cordwipe #dataConsent').uncheck();
+  await page.waitForFunction(() => document.querySelector('#progressPercent').textContent.startsWith('stopped:'));
+  await page.locator('#cordwipe #start').click();
+  assert.equal(await page.evaluate(() => window.calls.length), 1);
+  assert.match(await page.locator('#logArea').textContent(), /Allow session and message access/);
+  assert.equal(await page.locator('#cordwipe #start').isEnabled(), true);
+});
+
+test('privacy consent precedes identity/session access; no credential field exists', async t => {
+  const page = await fixture(t);
+  await open(page);
+  await page.evaluate(() => {
+    localStorage.setItem('token', JSON.stringify('synthetic-credential'));
+    localStorage.setItem('user_id_cache', JSON.stringify('111111111111111111'));
+    window.frameReads = 0;
+    new MutationObserver(records => {
+      for (const record of records) for (const node of record.addedNodes) if (node.nodeName === 'IFRAME') window.frameReads++;
+    }).observe(document.body, { childList: true });
+  });
+  await page.locator('#cordwipe #getAuthor').click();
+  await page.locator('#cordwipe #start').click();
+  assert.equal(await page.evaluate(() => window.frameReads), 0);
+  assert.equal(await page.locator('#cordwipe #authorId').inputValue(), '');
+  assert.deepEqual(await page.evaluate(() => window.calls), []);
+  assert.match(await page.locator('.data-notice').textContent(), /session authorization and message history/);
+  await page.locator('#cordwipe #dataConsent').check();
+  await page.locator('#cordwipe #getAuthor').click();
+  assert.equal(await page.locator('#cordwipe #authorId').inputValue(), AUTHOR);
+  assert.equal(await page.evaluate(() => window.frameReads), 1);
+  assert.equal(await page.locator('#cordwipe #token, #cordwipe #getToken').count(), 0);
   assert.equal(await page.locator('iframe').count(), 0);
   assert.doesNotMatch(await page.locator('#logArea').textContent(), /synthetic-credential/);
   assert.deepEqual(await page.evaluate(() => window.calls), []);
@@ -204,7 +245,9 @@ test('explicit token Fill cleans up its iframe; synthetic credentials are never 
 test('webpack fallback removes only its own chunk and does not dispatch beforeunload', async t => {
   const page = await fixture(t);
   await open(page);
+  await fill(page);
   await page.evaluate(() => {
+    localStorage.removeItem('token');
     window.beforeUnloadCount = 0;
     addEventListener('beforeunload', () => window.beforeUnloadCount++);
     const realChunk = [['real'], {}, () => {}];
@@ -215,9 +258,15 @@ test('webpack fallback removes only its own chunk and does not dispatch beforeun
       chunk[2]({ c: { fake: { exports: { getToken: () => 'synthetic-webpack' } } } });
       Array.prototype.push.call(chunks, realChunk);
     };
+    window.mockFetch = async (url, options) => {
+      window.calls.push({ method: options.method, authorization: options.headers.Authorization });
+      return Response.json({}, { status: 401 });
+    };
   });
-  await page.locator('#cordwipe #getToken').evaluate(el => el.click());
-  assert.equal(await page.locator('#cordwipe #token').inputValue(), 'synthetic-webpack');
+  await page.locator('#cordwipe #start').click();
+  await page.waitForFunction(() => document.querySelector('#progressPercent').textContent.startsWith('failed:'));
+  assert.equal(await page.evaluate(() => window.calls[0].authorization), 'synthetic-webpack');
+  assert.doesNotMatch(await page.locator('#cordwipe').innerHTML(), /synthetic-webpack/);
   assert.deepEqual(await page.evaluate(() => ({ count: window.webpackChunkdiscord_app.length, retained: window.webpackChunkdiscord_app[0] === window.realChunk, unload: window.beforeUnloadCount })), { count: 1, retained: true, unload: 0 });
 });
 
