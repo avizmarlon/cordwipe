@@ -33,12 +33,14 @@
     "start": "npm run watch",
     "build": "rollup -c",
     "watch": "rollup -c -w",
-    "test": "npm run lint && npm run test:unit && npm run build && npm run test:browser",
+    "test": "npm run lint && npm run test:unit && npm run build && npm run test:browser && npm run build:extension && npm run test:extension",
     "lint": "eslint src test build rollup.config.mjs --ext .js,.mjs",
     "lint:fix": "eslint src --fix",
     "version": "npm run build",
     "test:unit": "node --test test/core.test.mjs test/build.test.mjs",
-    "test:browser": "node --test test/browser.test.mjs"
+    "test:browser": "node --test test/browser.test.mjs",
+    "build:extension": "npm run build && node build/extension.mjs && node build/package-extension.mjs",
+    "test:extension": "node --test test/extension.test.mjs"
   },
   "files": [
     "cordwipe.user.js",
@@ -59,6 +61,7 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/pluginutils": "^5.4.0",
     "eslint": "^8.36.0",
+    "fflate": "^0.8.3",
     "playwright": "^1.61.1",
     "rollup": "^3.20.2",
     "rollup-plugin-baked-env": "^1.0.1",
