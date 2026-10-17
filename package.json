@@ -37,7 +37,7 @@
     "lint": "eslint src test build rollup.config.mjs --ext .js,.mjs",
     "lint:fix": "eslint src --fix",
     "version": "npm run build",
-    "test:unit": "node --test test/core.test.mjs",
+    "test:unit": "node --test test/core.test.mjs test/build.test.mjs",
     "test:browser": "node --test test/browser.test.mjs"
   },
   "files": [

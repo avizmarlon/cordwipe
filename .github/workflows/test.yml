@@ -1,9 +1,9 @@
 name: Tests
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
   push:
-    branches: [master, 'codex/**']
+    branches: [main, 'codex/**']
   workflow_dispatch:
 permissions:
   contents: read

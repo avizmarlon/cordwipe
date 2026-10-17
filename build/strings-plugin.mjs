@@ -12,6 +12,8 @@ export function string(opts = {}) {
 
     transform(code, id) {
       if (filter(id)) {
+        // Normalize checkout line endings before embedding text assets in the userscript.
+        code = code.replace(/\r\n?/g, '\n');
         if (opts.transform) code = opts.transform(code, id, opts);
         return {
           code: 'export default ' + JSON.stringify(code) + ';',
