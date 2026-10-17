@@ -16,6 +16,11 @@ If the link displays JavaScript instead of an installation prompt, check that yo
 
 This is an **early development build**, not a stable release. Auto-updates are disabled; install newer versions manually from this repository after reviewing the changes. No browser-store publication is available. CordWipe only runs in the Discord web app, not the desktop app.
 
+## Browser extension (Chrome / Edge, experimental)
+
+CordWipe can also run as a **standalone Manifest V3 extension**, with no userscript manager required. To build a ZIP or unpacked extension from the same source, run `npm ci` and `npm run build:extension`. In Chrome/Edge, **extract the ZIP**, enable Developer mode in the browser's Extensions page, then select **Load unpacked** and choose the folder containing `manifest.json`. A ZIP is **not** a one-click extension installer.
+
+See the [complete extension installation, security and testing instructions](./docs/extension.md). No extension has been published to a store or enabled for automatic updates.
 ## Usage
 
 Open the CordWipe panel from its trash button. The **me** control fills your author ID from Discord's in-page data. This reads the ID only; it does not retrieve an authorization token or make an API request. **current** beside Channel fills the current server and channel. **current** beside Server fills the current server; in a DM it sets the target to `@me` and fills the DM channel.
