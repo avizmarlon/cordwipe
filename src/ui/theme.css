@@ -38,13 +38,20 @@
 }
 
 #cordwipe .header h3 {
-    font-size: 16px;
-    line-height: 20px;
-    font-weight: 500;
-    font-family: var(--font-display);
-    color: var(--header-primary);
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 900;
+    font-family: "Arial Black", Arial, sans-serif;
+    letter-spacing: -1px;
+    color: #f8f9ff;
     flex-shrink: 0;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-right: 16px;
+}
+
+#cordwipe .brand-wordmark span {
+    color: #473ffa;
 }
 
 #cordwipe .spacer {

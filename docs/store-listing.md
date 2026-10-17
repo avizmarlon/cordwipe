@@ -18,13 +18,20 @@ Social Media & Networking — Discord is the only supported service and the exte
 
 **Detailed description**
 
-CordWipe helps you find and delete your own messages in Discord channels and direct messages.
+CordWipe lets you delete your own Discord messages in bulk, in DMs, channels and servers.
 
-Choose a server or channel, narrow results with text, pattern, date, or message-ID filters, and review the scope and a sample of matching messages before confirming deletion. CordWipe checks that candidates belong to your account and asks for confirmation before each channel's deletion run. It applies filters to candidates locally before deletion, observes Discord's responses and rate limits, and reports deleted, missing, failed, or skipped messages separately.
+Choose where to clean up, use filters to find the messages you want to remove, then review the scope and a sample of matches before confirming.
 
-CordWipe accesses your existing Discord session authorization only after you start **Find & review**. Message filtering happens in the page; authenticated requests go to Discord. CordWipe has no service backend, analytics, or account of its own. The extension works on Discord's web app at discord.com, ptb.discord.com, and canary.discord.com in Chrome and Chromium-based Edge.
+- Narrow your search by text, dates, links, attachments or message IDs.
+- Delete only messages from your own account.
+- Confirm each channel's deletion and follow the progress as it runs.
+- Stop a run when you need to.
 
-Deleting messages is irreversible. Discord account automation may violate Discord's Terms of Service. Use only on messages you intend to remove and review the scope and preview carefully before confirming.
+CordWipe uses your existing Discord session when you start **Find & review**. It processes messages in your browser and sends requests only to Discord. There are no CordWipe accounts, servers or analytics.
+
+Works with Discord's website in Chrome and Edge, including PTB and Canary.
+
+Deletion is permanent, so review your selection carefully. Discord account automation may violate Discord's Terms of Service.
 
 **Website**
 
@@ -91,8 +98,9 @@ CordWipe's content script runs only on `discord.com`, `ptb.discord.com`, and `ca
 ## Submission checklist
 
 - [ ] Use a final, reviewed ZIP generated from the exact source revision intended for submission; verify its manifest version and included files.
-- [x] Owner selected **D — Conversation stack**, with transparent artwork. Its 16/48/128 px exports are integrated in the candidate branch.
-- [ ] Review the final ZIP and matching D promo/screenshot files before authorizing submission.
+- [x] Owner approved the violet chat-bubble trash-bin icon; it is used by the in-page launcher/header, 16/48/128 px package icons and the new promotional concepts.
+- [x] Owner selected concept 1 — Focus. Its wordmark uses white “Cord” and violet “Wipe”, matching the panel header.
+- [ ] Review the final ZIP and matching promo/screenshot files before authorizing submission.
 - [ ] Select the matching 440×280 promotional PNG and the three 1280×800 screenshots. A marquee and video are optional; no concrete launch need currently justifies creating them.
 - [ ] Confirm name, short and detailed descriptions, English language, category, website, support, and privacy-policy URLs in the dashboard. The short description is imported from the manifest, not a separate store-only override.
 - [ ] Complete single-purpose, permission, remote-code, and user-data disclosures against the submitted ZIP. Certify Limited Use only if still accurate.
@@ -115,10 +123,14 @@ CordWipe's content script runs only on `discord.com`, `ptb.discord.com`, and `ca
 
 ## Artwork and reproducibility
 
-Review the [icon options, matching promo tiles and three screenshots](../images/store/index.html). All icon proposals have transparent canvases, with exports at 512, 128, 48 and 16 pixels; checkerboard/light/dark surfaces in the comparison sheet are presentation backgrounds. The owner selected D; its exports are integrated into the extension package on the review branch. The other proposals are retained for comparison. The proposals were generated with the built-in image tool; the [prompt set](../images/store/icon-prompts.json) records their design inputs. Promotional PNGs are RGB 440×280; screenshots are RGB 1280×800 with no alpha.
+The owner selected [concept 1 — Focus](../images/store/banners/2026-10-17/01-focus-440x280.png), with white “Cord” and violet “Wipe”. The same wordmark colors and bold typographic treatment are used in the panel header. The [five concepts](../images/store/banners/2026-10-17/index.html) and [comparison sheet](../images/store/banners/2026-10-17/comparison.png) remain available. They use the approved violet chat-bin reference, also reconstructed as the shared in-page SVG. Each has a 440×280 RGB PNG and a matching 1540×980 source composition. The [prompt set](../images/store/banners/2026-10-17/prompts.json) records the built-in image-generation inputs and the selected banner's color adjustment. Nothing has been submitted.
+
+A [reversed wordmark preview](../images/store/banners/2026-10-17/wordmark-comparison.png) shows violet “Cord” and white “Wipe” in the banner and actual installed-extension header. It is an alternative for owner comparison, not a runtime setting or a change to the current candidate. The README uses an 880×560 export of the current banner, displayed at 640 pixels wide.
+
+The [earlier icon exploration and screenshots](../images/store/index.html) remain available. The old A–D icon/promo options are retained for comparison; they are not the current banner candidates. The approved violet mark is shared by the in-page UI and browser package icons. Screenshot PNGs are RGB 1280×800 with no alpha.
 
 The screenshots show the installed extension's actual UI over a fictional conversation fixture, not a captured personal Discord account. Search and deletion responses are intercepted mocks. The operation-progress capture follows the real native confirmation and one simulated successful deletion; counts are not edited into the page. The native confirmation itself is not drawn as an invented in-page modal.
 
-After `npm run build:extension`, run `node test/store-assets.mjs` to reproduce screenshots. Run `node test/store-artwork.mjs` to validate icon exports and regenerate promo/comparison PNGs from the local artwork page. These commands use disposable Chromium contexts and no personal browser profile.
+After `npm run build:extension`, run `node test/store-assets.mjs` to reproduce screenshots. Run `node test/store-artwork.mjs` to validate the current banner exports and regenerate their comparison sheet, as well as the earlier icon/promo comparisons. Generated raster compositions are retained as source PNGs; the script exports their gallery, not new AI variants. These commands use disposable Chromium contexts and no personal browser profile.
 
 [Google's image specifications](https://developer.chrome.com/docs/webstore/images) require a PNG icon, at least one screenshot and a 440×280 small promo; the 1400×560 marquee is optional. Preserve the selected icon's transparency, visual padding and light/dark legibility when packaging it.

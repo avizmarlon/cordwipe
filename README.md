@@ -1,5 +1,9 @@
 # CordWipe
 
+<p align="center">
+  <img src="images/cordwipe-banner.png" width="640" alt="CordWipe — delete your own Discord messages">
+</p>
+
 [![Get it on Greasy Fork](https://img.shields.io/badge/Get_it_on-Greasy_Fork-670000)](https://greasyfork.org/en/scripts/600774-cordwipe)
 
 **Delete your own Discord messages in bulk.** Free, open source, and based on [Undiscord](https://github.com/victornpb/undiscord).

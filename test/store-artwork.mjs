@@ -51,8 +51,48 @@ try {
   const box = await page.locator('#icon-options').boundingBox();
   await page.screenshot({ path: path.join(root, 'icon-comparison.png'), clip: { x: 0, y: 0, width: 1280, height: Math.ceil(box.y + box.height + 24) } });
   await page.locator('.promos').screenshot({ path: path.join(root, 'promo-comparison.png') });
+  const bannerRoot = path.join(root, 'banners', '2026-10-17');
+  for (const size of [16, 48, 128]) {
+    const approved = await readFile(path.join(root, 'icons', `approved-chat-bin-${size}.png`));
+    assert.equal(approved.readUInt32BE(16), size);
+    assert.equal(approved.readUInt32BE(20), size);
+    assert.equal(approved[25], 6, 'Approved package icons must retain transparency');
+    assert.deepEqual(await readFile(new URL(`../extension/icons/icon${size}.png`, import.meta.url)), approved);
+  }
+  const bannerManifest = JSON.parse(await readFile(path.join(bannerRoot, 'prompts.json'), 'utf8'));
+  for (const { id } of bannerManifest.concepts) {
+    for (const [width, height, file] of [
+      [440, 280, `${id}-440x280.png`],
+      [1540, 980, `sources/${id}-1540x980.png`],
+    ]) {
+      const png = await readFile(path.join(bannerRoot, file));
+      assert.equal(png.readUInt32BE(16), width, `${file} width`);
+      assert.equal(png.readUInt32BE(20), height, `${file} height`);
+      assert.equal(png[25], 2, `${file} must be RGB without alpha`);
+    }
+  }
+  for (const [width, height, file] of [
+    [440, 280, path.join(bannerRoot, bannerManifest.alternative_wordmark.tile)],
+    [1540, 980, path.join(bannerRoot, bannerManifest.alternative_wordmark.source)],
+    [880, 560, path.join(root, '..', 'cordwipe-banner.png')],
+  ]) {
+    const png = await readFile(file);
+    assert.equal(png.readUInt32BE(16), width, `${file} width`);
+    assert.equal(png.readUInt32BE(20), height, `${file} height`);
+    assert.equal(png[25], 2, `${file} must be RGB without alpha`);
+  }
+  await page.setViewportSize({ width: 1000, height: 1500 });
+  await page.goto(pathToFileURL(path.join(bannerRoot, 'index.html')).href);
+  await page.locator('img').evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));
+  assert.equal(await page.locator('.tile').count(), 5);
+  for (const tile of await page.locator('.tile').all()) {
+    const box = await tile.boundingBox();
+    assert.equal(box.width, 440);
+    assert.equal(box.height, 280);
+  }
+  await page.screenshot({ path: path.join(bannerRoot, 'comparison.png'), fullPage: true });
   assert.deepEqual(errors, []);
-  console.log('Validated 16 transparent icon exports, four RGB 440x280 tiles, and comparison sheets.');
+  console.log('Validated transparent package icons, 16 earlier icon exports, four earlier tiles, five current banners/sources, inverse wordmark exports, README hero, and comparison sheets.');
 } finally {
   await browser.close();
 }

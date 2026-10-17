@@ -1,0 +1,63 @@
+{
+  "generator": "Built-in image_gen",
+  "approved_icon_reference": "approved-icon.png",
+  "approved_ui_vector": "../../../../src/ui/cordwipe-icon.svg",
+  "status": "Owner selected 01-focus; white Cord and violet Wipe adjustment requested and applied. Not submitted.",
+  "selected": "01-focus",
+  "alternative_wordmark": {
+    "status": "Preview only; not selected or applied to the distributed UI.",
+    "tile": "01-focus-cord-violet-440x280.png",
+    "source": "sources/01-focus-cord-violet-1540x980.png",
+    "prompt": "Edit target: the provided CordWipe banner. Produce an alternative wordmark colorway ONLY: 'Cord' should be vivid blue-violet matching the trash-bin front, approximately #473ffa; 'Wipe' should be white. This reverses the current white Cord / violet Wipe colorway. Preserve the exact bold geometric letterforms, all wordmark position, size and spacing, tagline 'Delete your own Discord messages', approved icon, dark background, outlines and layout. No new text or elements, no redesign. Preserve full 11:7 landscape composition. Change only those two parts' text colors."
+  },
+  "wordmark_revision": {
+    "prompt": "Edit target: the provided CordWipe promotional banner. Change ONLY the color of the letters 'Wipe' in 'CordWipe' from white to the exact same vivid blue-violet color as the purple trash-bin/chat icon front (approximately #473ffa). Keep 'Cord' white. Preserve the existing bold geometric letterforms, wordmark size and placement, all spacing, tagline 'Delete your own Discord messages', approved icon, outlines, background and composition unchanged. No new text or objects. Keep the full original 11:7 landscape composition, with no cropping. This is a precise text-color edit to the owner-approved design, not a redesign.",
+    "output": "sources/01-focus-1540x980.png",
+    "readme_export": "../../../cordwipe-banner.png",
+    "ui_color": "#473ffa"
+  },
+  "export": {
+    "format": "PNG RGB, opaque",
+    "tile": [
+      440,
+      280
+    ],
+    "source": [
+      1540,
+      980
+    ],
+    "normalization": "Centered aspect-ratio trim under 1%, followed by Lanczos resizing; no semantic edits."
+  },
+  "concepts": [
+    {
+      "id": "01-focus",
+      "title": "Focus",
+      "prompt": "Use case: ads-marketing. Create a polished Chrome Web Store promotional banner for CordWipe, a browser extension that bulk-deletes only the user's own Discord messages. Landscape composition at 1760 x 1120 pixels (exact 11:7 aspect ratio), designed to remain crisp and readable downscaled to 440 x 280. Input image 1 is the APPROVED CordWipe brand mark, not a style suggestion: preserve its integrated purple chat-bubble trash-can silhouette, lid handle, two vertical slots, chat tail at bottom left, black outline and thin white keyline. Reuse that icon as the dominant hero; no redesigned logo, extra symbols inside it, no square background around icon. Dark tech-friendly visual design, professional restrained violet accent palette, large clear typography, few elements, strong hierarchy, spacious margins. Only the explicitly requested text, spelled exactly; no tiny labels, fake app interfaces, fake metrics, certification badges, Chrome or Discord logos, official affiliation claims, extra brand marks or watermark. Full-bleed background.\nComposition: confident two-column editorial poster. Left half contains large white brand name \"CordWipe\", with a smaller but still strongly legible two-line sentence \"Delete your own\\nDiscord messages\". Right half holds the approved icon very large and flat, with a quiet soft violet light behind it. A few restrained message-line shapes recede behind the icon, never competing with it. Deep ink background, crisp typography, minimal polished flat design. Text exactly: \"CordWipe\" and \"Delete your own Discord messages\"."
+    },
+    {
+      "id": "02-sweep",
+      "title": "Sweep",
+      "prompt": "Use case: ads-marketing. Create a polished Chrome Web Store promotional banner for CordWipe, a browser extension that bulk-deletes only the user's own Discord messages. Landscape composition at 1760 x 1120 pixels (exact 11:7 aspect ratio), designed to remain crisp and readable downscaled to 440 x 280. Input image 1 is the APPROVED CordWipe brand mark, not a style suggestion: preserve its integrated purple chat-bubble trash-can silhouette, lid handle, two vertical slots, chat tail at bottom left, black outline and thin white keyline. Reuse that icon as the dominant hero; no redesigned logo, extra symbols inside it, no square background around icon. Dark tech-friendly visual design, professional restrained violet accent palette, large clear typography, few elements, strong hierarchy, spacious margins. Only the explicitly requested text, spelled exactly; no tiny labels, fake app interfaces, fake metrics, certification badges, Chrome or Discord logos, official affiliation claims, extra brand marks or watermark. Full-bleed background.\nComposition: dynamic diagonal message cleanup illustration. Approved icon large at lower left, a simple stack of three broad chat-message cards moves diagonally toward it from upper right and clears into a clean open area. Use one restrained sweeping violet ribbon to suggest bulk action, no confetti or noisy particles. Upper left large brand name \"CordWipe\"; lower right two-line headline \"Clean up your\\nchat history\". The abstract message cards contain only simple line glyphs, no readable content. Dark charcoal, luminous purple and soft white. Flat precise icon retained; background illustration may have subtle depth. Text exactly: \"CordWipe\" and \"Clean up your chat history\"."
+    },
+    {
+      "id": "03-control",
+      "title": "Control",
+      "prompt": "Use case: ads-marketing. Create a polished Chrome Web Store promotional banner for CordWipe, a browser extension that bulk-deletes only the user's own Discord messages. Landscape composition at 1760 x 1120 pixels (exact 11:7 aspect ratio), designed to remain crisp and readable downscaled to 440 x 280. Input image 1 is the APPROVED CordWipe brand mark, not a style suggestion: preserve its integrated purple chat-bubble trash-can silhouette, lid handle, two vertical slots, chat tail at bottom left, black outline and thin white keyline. Reuse that icon as the dominant hero; no redesigned logo, extra symbols inside it, no square background around icon. Dark tech-friendly visual design, professional restrained violet accent palette, large clear typography, few elements, strong hierarchy, spacious margins. Only the explicitly requested text, spelled exactly; no tiny labels, fake app interfaces, fake metrics, certification badges, Chrome or Discord logos, official affiliation claims, extra brand marks or watermark. Full-bleed background.\nComposition: centered symmetrical brand poster, clearly different from a two-column ad. Large brand name \"CordWipe\" centered near top. Approved icon hero centered in middle, flanked by two small abstract stacks of message bubbles, orderly and sparse. One short line beneath icon: \"Delete your own messages\". Bottom line in readable subdued type: \"DMs · Channels · Servers\". Dark violet-black background, a simple fine outline frame and precise geometric spacing. No interface screenshot, no buttons, no busy grid. Keep all five lines readable at 440px wide. Text exactly: \"CordWipe\", \"Delete your own messages\", \"DMs · Channels · Servers\"."
+    },
+    {
+      "id": "04-clear-space",
+      "title": "Clear space",
+      "prompt": "Use case: ads-marketing. Create a polished Chrome Web Store promotional banner for CordWipe, a browser extension that bulk-deletes only the user's own Discord messages. Landscape composition at 1760 x 1120 pixels (exact 11:7 aspect ratio), designed to remain crisp and readable downscaled to 440 x 280. Input image 1 is the APPROVED CordWipe brand mark, not a style suggestion: preserve its integrated purple chat-bubble trash-can silhouette, lid handle, two vertical slots, chat tail at bottom left, black outline and thin white keyline. Reuse that icon as the dominant hero; no redesigned logo, extra symbols inside it, no square background around icon. Dark tech-friendly visual design, professional restrained violet accent palette, large clear typography, few elements, strong hierarchy, spacious margins. Only the explicitly requested text, spelled exactly; no tiny labels, fake app interfaces, fake metrics, certification badges, Chrome or Discord logos, official affiliation claims, extra brand marks or watermark. Full-bleed background.\nComposition: wide editorial before/after feeling without literal labels. Left third shows a small tidy group of muted overlapping message bubbles; toward the right the composition opens into empty dark space. Approved icon large at the transition, slightly left of center, like a cleanup marker. In the clear right half put strong white brand name \"CordWipe\" and short large three-line text \"Clean up\\nyour chat\\nhistory\". Create contrast with a large restrained curved violet-to-ink area, no glowing rings, no fake UI. Clean graphic-design poster with generous negative space. Text exactly: \"CordWipe\" and \"Clean up your chat history\"."
+    },
+    {
+      "id": "05-bulk",
+      "title": "Bulk",
+      "prompt": "Use case: ads-marketing. Create a polished Chrome Web Store promotional banner for CordWipe, a browser extension that bulk-deletes only the user's own Discord messages. Landscape composition at 1760 x 1120 pixels (exact 11:7 aspect ratio), designed to remain crisp and readable downscaled to 440 x 280. Input image 1 is the APPROVED CordWipe brand mark, not a style suggestion: preserve its integrated purple chat-bubble trash-can silhouette, lid handle, two vertical slots, chat tail at bottom left, black outline and thin white keyline. Reuse that icon as the dominant hero; no redesigned logo, extra symbols inside it, no square background around icon. Dark tech-friendly visual design, professional restrained violet accent palette, large clear typography, few elements, strong hierarchy, spacious margins. Only the explicitly requested text, spelled exactly; no tiny labels, fake app interfaces, fake metrics, certification badges, Chrome or Discord logos, official affiliation claims, extra brand marks or watermark. Full-bleed background.\nComposition: bold typographic campaign. Upper half features very large white headline \"Bulk-delete\\nyour messages\" with enough left/right margin. Lower half: approved icon large at right, three simple abstract horizontal message rows at left with a violet selection edge, suggesting selecting a group without inventing product controls. Small but readable brand name \"CordWipe\" sits at bottom left and the single word \"Discord\" sits just beneath it in plain typography, no official styling or logo. Dark graphite backdrop, a crisp violet diagonal surface at lower right. Very sparse, high contrast, no buttons, no extra copy. Text exactly: \"Bulk-delete your messages\", \"CordWipe\", \"Discord\"."
+    }
+  ],
+  "iteration": {
+    "concept": "01-focus",
+    "reason": "Correct initial aspect ratio without cutting text or the icon.",
+    "prompt": "Use case: compositing. Edit input image 1 (the existing CordWipe promotional banner). Correct only the composition aspect ratio: create a less wide/taller landscape canvas with exact 11:7 aspect ratio (target 1760 by 1120), same ratio as a 440 by 280 Chrome Web Store tile. Keep the left typography and right approved icon, same exact text 'CordWipe' and 'Delete your own Discord messages', same dark ink/violet palette and quiet background message shapes. Input image 2 is the approved icon to preserve. Keep the complete text and complete icon comfortably inside a 6% safe margin, icon on the right, copy on left, very legible after reduction to 440 by 280. No extra text, no Discord logo, no badges, no border, no watermark. Output one finished full-bleed banner; do not return a comparison or a framed image. Make the image proportionally taller, not a very wide banner."
+  }
+}
