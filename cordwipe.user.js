@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name        CordWipe [Development]
-// @description Delete your own matching Discord messages with explicit scope and confirmation.
+// @name        CordWipe
+// @description Delete your own Discord messages in bulk, in DMs, channels, and servers.
 // @version     0.1.0-dev.1
 // @author      CordWipe contributors
 // @homepageURL https://github.com/avizmarlon/cordwipe

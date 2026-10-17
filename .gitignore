@@ -386,3 +386,6 @@ $RECYCLE.BIN/
 
 # Synthetic browser evidence (local only)
 test-results/
+
+# Local project checkpoint (not user-facing documentation)
+STATE.md
