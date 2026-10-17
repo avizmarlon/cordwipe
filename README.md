@@ -45,7 +45,7 @@ Stop cannot recall a deletion request already sent to Discord. A stopped or time
 ## Compatibility and limitations
 
 - CordWipe targets Discord's web client in a browser. The desktop application is not supported.
-- This is `0.1.0-dev.1`; no live Discord UI, browser/userscript-manager combination, or real deletion has been validated for this build. Automatic tests use local fixtures and simulated responses only.
+- This is `0.1.0-dev.1`. On October 17, 2026, the owner confirmed with screenshots that the launcher appeared and opened the panel in Discord's web client. This validates that interface path in one environment; broader browser/userscript-manager compatibility, live authentication, search, and deletion remain unverified. Automatic tests use local fixtures and simulated responses only.
 - Discord's server search is indexed and may omit messages. A completed server search means the returned matches were exhausted; it does not prove every matching server message was found.
 - DM/group-DM history is paged directly. Completion means the history available to the script was traversed to the selected lower bound; access, retention, and API behavior can limit results.
 - Discord may change its DOM, API, permissions, or rate limits without notice. Search results, message availability, and deletion permissions are controlled by Discord.
