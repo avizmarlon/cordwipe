@@ -19,7 +19,7 @@ No Tampermonkey or Violentmonkey needed.
 
 The extension is currently distributed through [GitHub Releases](https://github.com/avizmarlon/cordwipe/releases). To update it, download the newer ZIP, replace the extracted files, and reload the extension and Discord page.
 
-**Public preview:** `0.1.0-dev.1`. The newer candidate in [PR #7](https://github.com/avizmarlon/cordwipe/pull/7) is still under review and is not included in that download. The usage and privacy behavior below describe the candidate; the public preview uses the older interface. No new release has been approved yet.
+**Public preview:** `0.1.0-dev.1`. The newer `0.1.0-dev.3` candidate has been tested and merged into the source on `main`, but is not included in that download. The usage and privacy behavior below describe the candidate; the public preview uses the older interface. No new release has been approved yet.
 
 ### Userscript — Firefox, Chrome, Edge, and others
 
@@ -53,7 +53,7 @@ Found a bug or have an idea? [Open an issue](https://github.com/avizmarlon/cordw
 
 ## Credits and license
 
-CordWipe is based on **[Undiscord](https://github.com/victornpb/undiscord)** by [victornpb](https://github.com/victornpb) and its contributors. Thanks to [PurgeCord](https://github.com/feelmypain/purgecord) for ideas that informed later improvements.
+CordWipe is based on **[Undiscord](https://github.com/victornpb/undiscord)** by [victornpb](https://github.com/victornpb) and its contributors.
 
 Licensed under [MIT](LICENSE), with the original authors' copyright and attribution preserved.
 

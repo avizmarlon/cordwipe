@@ -1,0 +1,22 @@
+{
+  "generator": "Built-in image generation",
+  "status": "Direction D selected by owner; packaged in review branch only",
+  "prompts": [
+    [
+      "a_chat_bin",
+      "A freestanding app icon combining a speech bubble and trash can into ONE instantly understandable message-deletion symbol: white chat bubble body, a bold cyan trash-can lid and simple cyan 2 vertical slots cut through the body. Bubble tail retained at bottom left. Crisp flat geometric pictogram, thick bold silhouette, front-facing, high contrast restrained cyan-white-navy shapes, legible16px. Entire area OUTSIDE the symbol must be truly transparent. No colored background, no tile, no rounded square backplate, no disc, no border, no shadow, no floor, no text, no logo, no Discord official logo, no decorations. Draw the symbol only."
+    ],
+    [
+      "b_bubble_trash",
+      "A minimalist freestanding icon for deleting messages: a coral solid trash-can silhouette with two bold negative-space openings shaped like small rectangular speech bubbles inside the bin. Strong clever negative space, one distinctive flat vector-like symbol, chunky simple geometry and balanced proportions, front-facing and readable16px. Coral plus tiny cream details, no other decor. Entire outside area genuinely alpha-transparent. NO painted background, NO tile, NO square, NO disc, NO badge or border, NO shadows or glow, NO floor, NO words, NO official Discord marks. Symbol only, centered."
+    ],
+    [
+      "c_erase_message",
+      "A freestanding modern icon for deleting chat messages: two short indigo chat-message bars with a clear little bubble-tail on the bottom bar, being erased on the right by a chunky lavender-and-white diagonal eraser. Carefully composed compact silhouette, clean flat graphic, squared-soft corners, front-facing, clear at16px, bold forms and negative space. True transparent alpha around all objects. Do not add any colored background, square, round tile, circle, badge, plate, floor, shadows, glow, text, Discord logo or other branding. Only the bars and eraser."
+    ],
+    [
+      "d_stack_delete",
+      "Design a freestanding minimal browser icon clearly representing bulk message deletion: two offset outlined speech bubbles, one turquoise and one white with a thin dark navy edge for visibility on light background, with a small bold navy trash can in the lower right integrated into the foreground bubble. Excellent clean flat pictogram, chunky strokes, uncomplicated silhouette, front-facing, recognizable at24px. Genuine transparent canvas with no colored backing at all. No square, tile, disc, rounded rectangle background, floor, shadow, glow, text, official Discord logo or affiliation. Draw only the deletion symbol."
+    ]
+  ]
+}

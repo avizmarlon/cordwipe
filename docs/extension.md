@@ -11,7 +11,7 @@ CordWipe runs in Discord's web app on Chrome and Edge 111 or later. It is not ye
 
 To update, replace the extracted files with a newer version, click **Reload** on the browser's Extensions page, and reload Discord.
 
-The newer candidate in [PR #7](https://github.com/avizmarlon/cordwipe/pull/7) is under review and has not been released. The public ZIP still contains the older interface. To test an unreleased candidate, build its branch from source below; public installation does not depend on temporary CI artifacts.
+The newer `0.1.0-dev.3` candidate was tested and merged into `main`, but has not been released as an extension ZIP. The public ZIP still contains the older interface. To test an unreleased candidate, build its branch from source below; public installation does not depend on temporary CI artifacts.
 
 ## Build from source
 
