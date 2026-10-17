@@ -1,53 +1,29 @@
-# Contributing
+# Contributing to CordWipe
 
-# Before making any changes ✋
-## Do not edit files at top
+Thanks for helping improve CordWipe. Keep changes focused, preserve the Undiscord copyright and attribution in [`LICENSE`](./LICENSE), and describe any behavior change and its verification in your pull request.
 
-Please do not make changes to the `.js` files in the top directory!  
-Only make changes to the files inside the `src/` folder, otherwise I can't merge your changes back to the project.
+## Development
 
-Also, do not commit changes to the `deleteDiscordMessages.user.js` file!
+Use Node.js 20 or later. Install the locked development dependencies and run the automated checks:
 
-Do not alter the version, because I may have to change this depending on the order of things that get merged into main. So please leave it as is to avoid conflicts.
+```sh
+npm ci
+npx playwright install chromium
+npm test
+```
 
-## Oddities about this project
+The build output is `cordwipe.user.js`. Do not hand-edit the generated bundle; change source files and rebuild. Tests must use mocks or local fixtures. Never use a real Discord account, capture an authorization value, or delete real messages for development or CI.
 
-> This is NOT your typical javascript App, so this project has a few oddities:
+## Safety expectations
 
-- Do NOT add external dependencies or libraries.  
-  The only allowed dependencies are related things that run during build and testing.
-  The script itself should't import or load anything external.
-  The reason for this is security, if the user has to audit external packages we're doomed.
+- Keep authorization and message content out of logs, fixtures, screenshots, commits, and issue reports.
+- Do not add credential exfiltration, persistence, telemetry, remote code, or automatic update/download URLs.
+- Preserve explicit author, channel/server scope, and user-selected filters through search and deletion. Fail closed if a result cannot be validated.
+- Respect Discord rate limits and stop or report errors rather than attempting to bypass platform controls.
+- Keep the UI understandable about what was found, what succeeded, what failed, and what remains after stopping.
 
-- Do NOT use Prettier.  
-  This project has to stay fairly short in order to be auditable in a short amount of time.
-  For that reason some parts of the code favor compactness instead of consistency of indentation.
+## Pull requests
 
+Explain the user-visible change, list relevant checks, and call out any live Discord behavior that remains unverified. Automated fixture tests are not evidence of live compatibility. Do not claim a feature works in Discord until it has been validated there by a human.
 
--------------------------------------------------------------------------------
-
-# Building the project
-# Now that you read that, this is what you do
-
-If you're unfamilliar with compiled Javascript, this is how you do it:
-
-1. Clone the repository to your computer
-2. Open the terminal inside the cloned directory
-3. Run `npm i` to download the project dependencies 
-4. Run `npm start` it will automatically compile the project, when you make changes
-
-## Testing your changes locally
-
-#### Click to watch video (45 seconds):
-[![Video Instructions](https://img.youtube.com/vi/AKTCvzvcPig/0.jpg)](https://www.youtube.com/watch?v=AKTCvzvcPig)
-https://www.youtube.com/watch?v=AKTCvzvcPig
-
-Open the URL that shows up in your console when you run `npm start` it will ask you to install a development version of Undiscord.
-You need to click the update button every time you make changes in TamperMonkey, or reinstall it by opening the URL again.
-
-You can alternatively test manually:
-
-Copy the contents of the `deleteDiscordMessages.user.js` at the top of the repository,
-and paste it directly into your browser console.
-
-----------------------------------------------------------------
+Contributions are submitted under the repository's MIT license and its attribution terms. By opening a pull request, you agree that your contribution may be distributed under those terms.

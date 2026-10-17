@@ -1,4 +1,4 @@
-<div id="undiscord" class="browser container redact" style="display:none;">
+<div id="cordwipe" role="dialog" aria-label="CordWipe" class="browser container redact" style="display:none;">
     <div class="header">
         <svg class="icon" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
             <path fill="currentColor" d="M15 3.999V2H9V3.999H3V5.999H21V3.999H15Z"></path>
@@ -6,17 +6,17 @@
                 d="M5 6.99902V18.999C5 20.101 5.897 20.999 7 20.999H17C18.103 20.999 19 20.101 19 18.999V6.99902H5ZM11 17H9V11H11V17ZM15 17H13V11H15V17Z">
             </path>
         </svg>
-        <h3>Undiscord</h3>
+        <h3>CordWipe</h3>
         <div class="vert-divider"></div>
         <span> Bulk delete messages</span>
         <div class="spacer"></div>
-        <div id="hide" class="icon" aria-label="Close" role="button" tabindex="0">
+        <button id="hide" class="icon" aria-label="Close" type="button">
             <svg aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor"
                     d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z">
                 </path>
             </svg>
-        </div>
+        </button>
     </div>
     <div class="window-body" style="display: flex; flex-direction: row;">
         <div class="sidebar scroll">
@@ -25,7 +25,7 @@
                 <fieldset>
                     <legend>
                         Author ID
-                        <a href="{{WIKI}}/authorId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -38,7 +38,7 @@
                 <fieldset>
                     <legend>
                         Server ID
-                        <a href="{{WIKI}}/guildId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
@@ -50,7 +50,7 @@
                 <fieldset>
                     <legend>
                         Channel ID
-                        <a href="{{WIKI}}/channelId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
@@ -63,36 +63,19 @@
                     </div>
                 </fieldset>
             </details>
-            <details>
-                <summary>Wipe Archive</summary>
-                <fieldset>
-                    <legend>
-                        Import index.json
-                        <a href="{{WIKI}}/importJson" title="Help" target="_blank" rel="noopener noreferrer">help</a>
-                    </legend>
-                    <div class="input-wrapper">
-                        <input type="file" id="importJsonInput" accept="application/json,.json" style="width:100%";>
-                    </div>
-                    <div class="sectionDescription">
-                        <br>
-                        After requesting your data from discord, you can import it here.<br>
-                        Select the "messages/index.json" file from the discord archive.
-                    </div>
-                </fieldset>
-            </details>
             <hr>
             <details>
                 <summary>Filter</summary>
                 <fieldset>
                     <legend>
                         Search
-                        <a href="{{WIKI}}/filters" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="search" type="text" placeholder="Containing text" priv>
                     </div>
                     <div class="sectionDescription">
-                        Only delete messages that contain the text
+                        Case-insensitive literal substring; all selected filters must match
                     </div>
                     <div class="sectionDescription">
                         <label><input id="hasLink" type="checkbox">has: link</label>
@@ -108,10 +91,10 @@
                 <fieldset>
                     <legend>
                         Pattern
-                        <a href="{{WIKI}}/pattern" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="sectionDescription">
-                        Delete messages that match the regular expression
+                        Case-insensitive regular expression; invalid patterns stop the run
                     </div>
                     <div class="input-wrapper">
                         <span class="info">/</span>
@@ -125,7 +108,7 @@
                 <fieldset>
                     <legend>
                         Interval of messages
-                        <a href="{{WIKI}}/messageId" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput mb1">
                         <div class="input-wrapper">
@@ -149,14 +132,14 @@
                 <fieldset>
                     <legend>
                         After date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper mb1">
                         <input id="minDate" type="datetime-local" title="Messages posted AFTER this date">
                     </div>
                     <legend>
                         Before date
-                        <a href="{{WIKI}}/dateRange" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
                         <input id="maxDate" type="datetime-local" title="Messages posted BEFORE this date">
@@ -165,7 +148,7 @@
                         Delete messages that were posted between the two dates.
                     </div>
                     <div class="sectionDescription">
-                        * Filtering by date doesn't work if you use the "Messages interval".
+                        Choose either a date interval or a message interval. Boundaries are exclusive.
                     </div>
                 </fieldset>
             </details>
@@ -175,20 +158,20 @@
                 <fieldset>
                     <legend>
                         Search delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="searchDelay" type="range" value="30000" step="100" min="100" max="60000">
+                        <input id="searchDelay" type="range" value="30000" step="100" min="1000" max="60000">
                         <div id="searchDelayValue"></div>
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend>
                         Delete delay
-                        <a href="{{WIKI}}/delay" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="input-wrapper">
-                        <input id="deleteDelay" type="range" value="1000" step="50" min="50" max="10000">
+                        <input id="deleteDelay" type="range" value="1000" step="50" min="1000" max="10000">
                         <div id="deleteDelayValue"></div>
                     </div>
                     <br>
@@ -201,11 +184,11 @@
                 <fieldset>
                     <legend>
                         Authorization Token
-                        <a href="{{WIKI}}/authToken" title="Help" target="_blank" rel="noopener noreferrer">help</a>
+                        <a href="{{WIKI}}" title="Help" target="_blank" rel="noopener noreferrer">help</a>
                     </legend>
                     <div class="multiInput">
                         <div class="input-wrapper">
-                            <input class="input" id="token" type="text" autocomplete="dont" priv>
+                            <input class="input" id="token" type="password" autocomplete="off" spellcheck="false" priv>
                         </div>
                         <button id="getToken">fill</button>
                     </div>
@@ -214,8 +197,8 @@
             <hr>
             <div></div>
             <div class="info">
-                Undiscord {{VERSION}}
-                <br> victornpb
+                CordWipe {{VERSION}}
+                <br> Based on Undiscord by victornpb and contributors
             </div>
         </div>
         <div class="main col">
@@ -234,10 +217,10 @@
                 </div>
             </div>
             <pre id="logArea" class="logarea scroll">
-                <div class="" style="background: var(--background-mentioned); padding: .5em;">Notice: Undiscord may be working slower than usual and<wbr>require multiple attempts due to a recent Discord update.<br>We're working on a fix, and we thank you for your patience.</div>
+                <div>Development build. Deletion is irreversible and account automation may violate Discord terms. Review your scope before confirming.</div>
                 <center>
-                    <div>Star <a href="{{HOME}}" target="_blank" rel="noopener noreferrer">this project</a> on GitHub!</div>
-                    <div><a href="{{HOME}}/discussions" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
+                    <div><a href="{{HOME}}" target="_blank" rel="noopener noreferrer">CordWipe source and installation guide</a></div>
+                    <div><a href="{{HOME}}/issues" target="_blank" rel="noopener noreferrer">Issues or help</a></div>
                 </center>
             </pre>
             <div class="tbar footer row">

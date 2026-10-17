@@ -1,6 +1,5 @@
 import fs from 'fs';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import banner from 'rollup-plugin-banner2';
 import json from '@rollup/plugin-json';
 import serve from 'rollup-plugin-serve';
@@ -89,8 +88,7 @@ const config = [
       ...devPlugins,
       bakedEnv(),
       json(),
-      resolve(),
-      commonjs(),
+      nodeResolve(),
 
       banner(userScriptMetadataBlock),
 

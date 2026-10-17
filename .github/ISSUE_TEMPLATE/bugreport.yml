@@ -1,21 +1,15 @@
 name: Bug Report
 description: Create a report to help fix issues.
-labels: ["Type: Bug", "Status: Triage"]
 body:
 - type: markdown
   attributes:
     value: |
-      ### 🐞 This form is for bugs reports ONLY!
-
-      * ❔ Questions, Help, Ideas, Feature requests or if you're not sure how to fill this form:
-         - Use the [💬 Discussion](https://github.com/victornpb/undiscord/discussions) tab instead
-
-      * Use the [🔎 Search](https://github.com/victornpb/undiscord/issues?q=TYPE_YOUR_SEARCH_HERE) to find duplicated issues before continuing.
-
-      * 🚮 If you don't fill this form correctly your issue is going to be deleted!
+      Report CordWipe bugs with a minimal reproduction. Never include tokens,
+      private messages, account data, or unredacted screenshots.
+      Search existing issues before submitting. Do not delete real messages to reproduce a bug.
 - type: input
   attributes:
-    label: Undiscord Version
+    label: CordWipe Version
     description: You can see the version in the bottom right corner or in the ViolentMonkey or TamperMonkey settings.
     placeholder: v0.0.0
   validations:
@@ -23,7 +17,7 @@ body:
 - type: input
   attributes:
     label: Browser
-    description: What browser you re using undiscord. Go to chrome://version/ and copy the version
+    description: Browser name and version
     placeholder: 110.0.5481.177 (Official Build) (x86_64)
   validations:
     required: true
@@ -67,7 +61,7 @@ body:
   attributes:
     label: Additional information & file uploads  
     description: |
-      You can add screenshots and additional information that is relevant to the issue in the comments below.
+      Use synthetic or fully redacted evidence only. Never share your authorization token.
       IMPORTANT: Make sure to verify you're not sharing any personal information. Redact any ID's or Names that might appear.
       Github Issues are publicly visible, do not post sensitive information here!
   validations:

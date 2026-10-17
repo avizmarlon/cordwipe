@@ -42,15 +42,17 @@ export default function userScriptMetadataBlock() {
   };
 
   if (!production) {
-    metadata.name = metadata.name + ' [DEV]';
+    metadata.name = metadata.name + ' [Watch]';
     metadata.namespace = metadata.namespace + '_DEV';
 
     delete metadata.downloadURL;
     delete metadata.updateURL;
     delete metadata.homepageURL;
 
-    metadata.downloadURL = metadata.updateURL = metadata.homepageURL = 'http://localhost:10001/deleteDiscordMessages.user.js';
+    metadata.updateURL = 'none';
+    metadata.homepageURL = pkg.homepage;
   }
 
-  return generateComment(metadata);
+  const notice = fs.readFileSync(new URL('../LICENSE', import.meta.url), 'utf8');
+  return generateComment(metadata) + '\n/*\n' + notice + '\n*/\n';
 }

@@ -1,42 +1,76 @@
-import { log } from './log';
+// Derived from Undiscord (victornpb and contributors); see LICENSE.
+import { log } from './log.js';
 
-export function getToken() {
-  window.dispatchEvent(new Event('beforeunload'));
-  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-  try {
-    return JSON.parse(LS.token);
-  } catch {
-    log.info('Could not automatically detect Authorization Token in local storage!');
-    log.info('Attempting to grab token using webpack');
-    return (window.webpackChunkdiscord_app.push([[''], {}, e => { window.m = []; for (let c in e.c) window.m.push(e.c[c]); }]), window.m).find(m => m?.exports?.default?.getToken !== void 0).exports.default.getToken();
+function readStored(key) {
+  const frame = document.createElement('iframe');
+  frame.hidden = true;
+  document.body.appendChild(frame);
+  try { return JSON.parse(frame.contentWindow.localStorage.getItem(key)); }
+  catch { return null; }
+  finally { frame.remove(); }
+}
+
+function fromModules(pick) {
+  const chunks = window.webpackChunkdiscord_app;
+  if (!chunks || typeof chunks.push !== 'function') return null;
+  let found = null;
+  const chunk = [[Symbol('cordwipe')], {}, runtime => {
+    for (const module of Object.values(runtime.c || {})) {
+      try {
+        const exports = module?.exports;
+        for (const candidate of [exports, exports?.default]) {
+          const value = candidate && pick(candidate);
+          if (value) { found = value; return; }
+        }
+      } catch { /* Module getters may throw. Never log their contents. */ }
+    }
+  }];
+  try { chunks.push(chunk); }
+  catch { /* Unsupported client: explicit manual entry remains available. */ }
+  finally {
+    // Remove only our own entry; another chunk may have been appended meanwhile.
+    const index = chunks.indexOf(chunk);
+    if (index >= 0) chunks.splice(index, 1);
   }
+  return found;
+}
+
+const usableToken = value => typeof value === 'string' && value.length > 0 && !value.startsWith('dQw4w9WgXcQ:');
+
+// Invoked only by an explicit Fill/Delete action, never by initialization.
+export function getToken() {
+  const stored = readStored('token');
+  if (usableToken(stored)) return stored;
+  return fromModules(source => {
+    const token = typeof source.getToken === 'function' && source.getToken();
+    return usableToken(token) ? token : null;
+  });
 }
 
 export function getAuthorId() {
-  const LS = document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage;
-  return JSON.parse(LS.user_id_cache);
+  const cached = readStored('user_id_cache');
+  if (typeof cached === 'string' && /^\d{17,20}$/.test(cached)) return cached;
+  const id = fromModules(source => {
+    const user = typeof source.getCurrentUser === 'function' && source.getCurrentUser();
+    return user?.id;
+  });
+  if (typeof id === 'string' && /^\d{17,20}$/.test(id)) return id;
+  log.error('Could not find your Author ID. Enter your numeric user ID manually.');
+  return '';
 }
 
-export function getGuildId() {
-  const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-  if (m) return m[1];
-  else alert('Could not find the Guild ID!\nPlease make sure you are on a Server or DM.');
+function currentRoute() {
+  const match = location.pathname.match(/^\/channels\/(@me|\d+)\/(\d+)/);
+  if (!match) { log.error('Open a channel or DM first.'); return null; }
+  return { guildId: match[1], channelId: match[2] };
 }
-
-export function getChannelId() {
-  const m = location.href.match(/channels\/([\w@]+)\/(\d+)/);
-  if (m) return m[2];
-  else alert('Could not find the Channel ID!\nPlease make sure you are on a Channel or DM.');
-}
-
+export const getGuildId = () => currentRoute()?.guildId || '';
+export const getChannelId = () => currentRoute()?.channelId || '';
 export function fillToken() {
   try {
-    return getToken();
-  } catch (err) {
-    log.verb(err);
-    log.error('Could not automatically detect Authorization Token!');
-    log.info('Please make sure Undiscord is up to date');
-    log.debug('Alternatively, you can try entering a Token manually in the "Advanced Settings" section.');
-  }
+    const token = getToken();
+    if (token) return token;
+  } catch { /* Do not expose credential-bearing errors. */ }
+  log.error('Authorization could not be detected. See the README security section.');
   return '';
 }

@@ -1,131 +1,75 @@
-# Undiscord - Delete all messages in a Discord channel or DM
-<!-- shields -->
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/victornpb/undiscord?color=%235865f2&display_name=tag&label=Undiscord&style=flat-square)][greasyfork_url]
-[![GitHub Release Date](https://img.shields.io/github/release-date/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/releases)
-[![GitHub License](https://img.shields.io/github/license/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/blob/master/LICENSE)
-[![CodeFactor](https://www.codefactor.io/repository/github/victornpb/undiscord/badge?style=flat-square)](https://www.codefactor.io/repository/github/victornpb/undiscord?style=flat-square)
-![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/victornpb/undiscord?style=flat-square)
-[![GitHub Stars](https://img.shields.io/github/stars/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/network/members)
-[![GitHub Discussions](https://img.shields.io/github/discussions/victornpb/undiscord?style=flat-square)](https://github.com/victornpb/undiscord/discussions)
-[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/victornpb/undiscord?style=flat-square&color=green)](https://github.com/victornpb/undiscord/pulls?q=is%3Apr+is%3Aclosed)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/victornpb/undiscord?style=flat-square&color=green)](https://github.com/victornpb/undiscord/issues?q=is%3Aissue+is%3Aclosed)
-<!-- end shields -->
+# CordWipe
 
-> ⚠️ **Any tool that automates actions on user accounts, including this one, could result in account termination.** (see [self-bots][self-bots]).  
-> Use at your own risk! ([discussion](https://github.com/victornpb/undiscord/discussions/273)).
+CordWipe is an open-source browser userscript for finding and deleting your own Discord messages in a direct message, group DM, or server. It is an early development build derived from Undiscord. Discord can change its web client or API at any time, so compatibility is not guaranteed.
 
-(Due to changes in chrome manifest V3, [Brave browser][brave_browser] is recommended)
+> **Use with care.** Message deletion is irreversible. [Discord prohibits automating normal user accounts](https://support.discord.com/hc/en-us/articles/115002192352-Automated-User-Accounts-Self-Bots) and may terminate accounts that do so. You are responsible for deciding whether to use this software. CordWipe is unaffiliated with Discord.
 
-1. First you need a Browser Extension for managing UserScripts[[1]][userscrips_faq] (skip if you already have one): '
-   * Brave: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
-   * Chrome: [Violentmonkey][chrome_violentmonkey] or [Tampermonkey][chrome_tampermonkey]
-   * Firefox: [Greasemonkey][firefox_greasemonkey], [Tampermonkey][firefox_tampermonkey], or [Violentmonkey][firefox_violentmonkey]  
-   * Opera: [Tampermonkey][opera_tampermonkey] or [Violentmonkey][opera_violentmonkey]
-   * Edge: [Tampermonkey][edge_tampermonkey]  
-   * Safari: ~[Tampermonkey][safari_tampermonkey]~ 
-    
-1. Install Undiscord:  
-  [![][greasyfork_icon]][greasyfork_url] or [![][openuserjs_icon]][openuserjs_url]  
-  (NOTE: GreasyFork is recommended for now, OpenUserJS is not receiving updates)
+## Development build
 
-1. Open <a href="https://discord.com/channels/@me" target="_blank">Discord</a> in your __browser__ (Not the App) and go to the channel or direct message you would like to be wiped.
+This repository does not publish a release or userscript-manager update feed. Install the local development build yourself:
 
-1. Click the <kbd>🗑️</kbd> button that was added in the top right corner.
+1. Install a userscript manager compatible with your browser, such as [Violentmonkey](https://violentmonkey.github.io/) or [Tampermonkey](https://www.tampermonkey.net/).
+2. Clone or download this repository and open the userscript manager's dashboard.
+3. Choose **Create a new script**, replace its editor contents with the full contents of [`cordwipe.user.js`](./cordwipe.user.js), and save with <kbd>Ctrl</kbd>+<kbd>S</kbd> (or <kbd>Cmd</kbd>+<kbd>S</kbd> on macOS).
+4. Disable any other Undiscord or PurgeCord userscript while testing to avoid duplicate controls.
+5. Open Discord in a browser at [discord.com](https://discord.com/channels/@me), not the desktop application. CordWipe's control should appear in the channel interface or its floating fallback.
 
-1. Click on the buttons near **Author ID** and **Server ID** and **Channel ID**.  
+The build artifact is generated from source; after changing code, run `npm run build` and install the resulting `cordwipe.user.js` again. Do not install a script from an unreviewed mirror or paste code into Discord's developer console.
 
-1. Click the ![Delete](https://user-images.githubusercontent.com/3372598/223744853-c0d4d9e3-1914-486b-bb4f-f27e40d0e3e7.png) button to begin wipping! 
+If the script is enabled but no control appears, check that the manager has permission to run userscripts on Discord. Tampermonkey documents this browser permission in its [userscript execution FAQ](https://www.tampermonkey.net/faq.php#Q209).
 
+## Usage
 
-![Screenshot](https://user-images.githubusercontent.com/3372598/222977831-88eeb59a-186a-4947-8e33-0ac245c3af5c.gif)
+Open the CordWipe panel from its trash button. The **me** control fills your author ID from Discord's in-page data. This reads the ID only; it does not retrieve an authorization token or make an API request. **current** beside Channel fills the current server and channel. **current** beside Server fills the current server; in a DM it sets the target to `@me` and fills the DM channel.
 
-I made this tool just for you ❤️ , it would be awesome if you could just click the [⭐️ Star button](https://github.com/victornpb/undiscord) at the top!
+To search a whole server, fill **Author ID** with **me**, fill **Server ID**, and leave **Channel ID** empty. To search a single server channel, use that channel's **current** button. For a DM or group DM, select **current** channel while the conversation is open; the server target must be `@me`. You can enter multiple channel IDs separated by commas. CordWipe validates each target and asks for confirmation separately for each channel.
 
-> A few extra generous people asked for this, so here you can [buy me a coffee](https://www.buymeacoffee.com/vitim). Thank you! You'll be in my special list ^_^
+Filters intersect: a candidate must match every selected filter. Text is a case-insensitive literal substring; a regular expression is also case-insensitive. Link, file/attachment, and pinned options further narrow matches. Choose either message ID bounds or date bounds, not both; interval boundaries are exclusive. CordWipe only considers ordinary messages and replies (Discord message types `0` and `19`) authored by the verified signed-in user.
 
-----
-### Need help?
-Check out the [wiki](https://github.com/victornpb/undiscord/wiki) for helpful articles, or read existing [questions](https://github.com/victornpb/undiscord/discussions), or post a new one.
+Defaults wait 30 seconds between search pages and one second between deletion requests. These waits are configurable, with a one-second minimum. Discord rate-limit instructions may require longer waits. CordWipe stops after its bounded retry limit rather than bypassing rate limits.
 
-### Have an Idea or Feature request?
-Check out the [Ideas][ideas] section, if your idea _hasn't been posted before_, please post a new one.
+The first deletion action explicitly retrieves authorization and checks the signed-in user through Discord's API. It then searches, shows a confirmation preview of the first matching page, and only sends deletion requests after you confirm. The preview is not a final total. **To check the interface safely, open the panel and inspect it without clicking Fill or Delete.** If you later decide to test deletion, use disposable messages and review the confirmation carefully.
 
-### Found a bug?
-Is prefered that _issues_ follow a certain format. If you're not familiar with bug reports, please use the [discussions][discussions] tab instead.
+In a DM or group DM, CordWipe reads history pages into memory to locate your messages; other participants' messages are never deletion candidates. CordWipe does not send those messages to any service other than Discord or persist them. In servers, it searches Discord's indexed search results and only processes entries marked as hits.
 
-If you believe you found a bug please file an [issue](https://github.com/victornpb/undiscord/issues), but please fill the issue template.
+## Safety and privacy
 
-If you are looking to contribute please read the [CONTRIBUTING](./CONTRIBUTING.md) first.
+CordWipe does not retrieve an authorization token or make API requests when the page loads. The **me** button reads your user ID from Discord's in-page data. The **Fill** button explicitly retrieves the authorization needed for requests; **Delete** does so if you did not use Fill first. CordWipe does not write the authorization value to logs or save it, and clears it from the panel and run state after use. Treat your browser session and userscript manager as sensitive; inspect the source before installing, and never share authorization values, screenshots, or diagnostic output that may expose private messages.
 
-### Copy paste version
-Looking for the old Copy/Paste version? [here](https://github.com/victornpb/undiscord/wiki/Copy-paste-method)
+The code runs in the browser while you are signed in and sends requests to Discord. A userscript manager or another extension with access to Discord pages may have broader capabilities. Install only code you trust.
 
+Deletion cannot be undone by CordWipe. Review the target, author, filters, and confirmation preview carefully. Stop halts further work, but messages already deleted remain deleted. Deleting your own messages does not remove copies, notifications, or data retained by other users or Discord.
 
-----
+Stop cannot recall a deletion request already sent to Discord. A stopped or timed-out request may have reached Discord even if its response was not received; counters include confirmed responses only. Logs omit message content, but confirmation previews display it outside Streamer mode's masking. Review your screen before sharing it.
 
-Originally from https://gist.github.com/victornpb/135f5b346dea4decfc8f63ad7d9cc182
+## Compatibility and limitations
 
-----
-## ⛔️ DO NOT SHARE YOUR AUTH TOKEN! ⛔️ ##
+- CordWipe targets Discord's web client in a browser. The desktop application is not supported.
+- This is `0.1.0-dev.1`. On October 17, 2026, the owner confirmed with screenshots that the launcher appeared and opened the panel in Discord's web client. This validates that interface path in one environment; broader browser/userscript-manager compatibility, live authentication, search, and deletion remain unverified. Automatic tests use local fixtures and simulated responses only.
+- Discord's server search is indexed and may omit messages. A completed server search means the returned matches were exhausted; it does not prove every matching server message was found.
+- DM/group-DM history is paged directly. Completion means the history available to the script was traversed to the selected lower bound; access, retention, and API behavior can limit results.
+- Discord may change its DOM, API, permissions, or rate limits without notice. Search results, message availability, and deletion permissions are controlled by Discord.
+- This tool cannot delete messages written by other people. Discord may reject an individual deletion; failures are reported and do not count as successful deletions.
 
-Sharing your authToken on the internet will give full access to your account! [There are bots gathering credentials all over the internet](https://github.com/rndinfosecguy/Scavenger).
-If you post your token by accident, LOGOUT from discord on that **same browser** you got that token imediately.
-Changing your password will make sure that you get logged out of every device. I advice that you turn on [2FA](https://support.discord.com/hc/en-us/articles/219576828-Setting-up-Two-Factor-Authentication) afterwards.
+## Development and tests
 
-If you are unsure do not post screenshots, or logs on the internet.
+Requires Node.js 20 or later. The browser fixture uses Playwright with Chromium; install its browser once with `npx playwright install chromium` if it is not already available.
 
-----
-## Security Concerns
+```sh
+npm ci
+npx playwright install chromium
+npm test
+```
 
-Using third-party scripts means you trust that the script’s developer hasn’t inserted malicious functionality into the code and has secured it against attackers trying to do the same. You should never run code you don't trust.
+`npm test` runs lint, unit tests, the build, and offline browser tests against a local fixture. `npm run test:browser` runs the fixture tests on their own. The fixture blocks network access and uses synthetic data; no test accesses a Discord account or deletes real messages. These checks do not validate a live Discord UI or any Tampermonkey/Violentmonkey and browser combination. Manual UI validation is still required. Any optional deletion test must use disposable messages only.
 
-Please read: [what I'm doing to ensure this is safe for users][security_policy].
+## Project and credits
 
-----
-#### DISCLAIMER
+- CordWipe repository: [github.com/avizmarlon/cordwipe](https://github.com/avizmarlon/cordwipe)
+- Original project: [Undiscord](https://github.com/victornpb/undiscord), created by [`victornpb`](https://github.com/victornpb) with contributions from its contributors. CordWipe preserves the original copyright and attribution required by the inherited MIT license.
+- Related work reviewed: [PurgeCord](https://github.com/feelmypain/purgecord), by `feelmypain` and its contributors. Its separation of DM history traversal from server search and its bounded pagination/error handling informed this investigation. CordWipe's current implementation is independently written; no PurgeCord source code is copied.
+- UI issue research: Undiscord [#805](https://github.com/victornpb/undiscord/issues/805), [#767](https://github.com/victornpb/undiscord/issues/767), and [#769](https://github.com/victornpb/undiscord/pull/769).
 
-> THE SOFTWARE AND ALL INFORMATION HERE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
->
-> By using any code or information provided here you are agreeing to all parts of the above Disclaimer.
+## License
 
-
-
-
-<!-- links -->
-  [self-bots]: https://support.discordapp.com/hc/en-us/articles/115002192352-Automated-user-accounts-self-bots-
-  [userscrips_faq]: https://en.wikipedia.org/wiki/Userscript
-  [greasyfork_icon]: https://user-images.githubusercontent.com/3372598/166113712-1bc3d654-1342-4f1e-9845-21c3b21524b1.png
-  [openuserjs_icon]: https://user-images.githubusercontent.com/3372598/166113714-5a2ede39-8d66-43a8-b5da-8f1897cb3121.png
-  [greasyfork_moderation]: https://greasyfork.org/en/moderator_actions
-
-  [issues]: https://github.com/victornpb/undiscord/issues
-  [issues_open]: https://github.com/victornpb/undiscord/issues
-  [issues_closed]: https://github.com/victornpb/undiscord/issues
-  [prs]: https://github.com/victornpb/undiscord/pulls
-  [pr_open]: https://github.com/victornpb/undiscord/pulls
-  [prs_closed]: https://github.com/victornpb/undiscord/pulls
-  [forks]: https://github.com/victornpb/undiscord/network/members
-
-  [wiki]: https://github.com/victornpb/undiscord/wiki
-  [discussions]: https://github.com/victornpb/undiscord/discussions
-  [ideas]: https://github.com/victornpb/undiscord/discussions/categories/2-ideas
-  [questions]: https://github.com/victornpb/undiscord/discussions/categories/1-questions-answers
-  [security_policy]: https://github.com/victornpb/undiscord/wiki/Security-Policy
-
-<!-- Extensions -->
-  [chrome_violentmonkey]: https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag
-  [chrome_tampermonkey]: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo
-  [firefox_greasemonkey]: https://addons.mozilla.org/firefox/addon/greasemonkey/
-  [firefox_tampermonkey]: https://addons.mozilla.org/firefox/addon/tampermonkey/
-  [firefox_violentmonkey]: https://addons.mozilla.org/firefox/addon/violentmonkey/
-  [safari_tampermonkey]: https://github.com/victornpb/undiscord/issues/91#issuecomment-654514364
-  [edge_tampermonkey]: https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd
-  [opera_tampermonkey]: https://addons.opera.com/extensions/details/tampermonkey-beta/
-  [opera_violentmonkey]: https://addons.opera.com/extensions/details/violent-monkey/
-
-<!-- Download links -->
-  [greasyfork_url]: <https://greasyfork.org/en/scripts/406540-undiscord-delete-all-messages-in-a-discord-channel-or-dm-bulk-deletion> "Get Undiscord from GreasyFork"
-  [openuserjs_url]: <https://openuserjs.org/scripts/victornpb/Undiscord_-_Delete_all_messages_in_a_Discord_channel_or_DM_(Bulk_deletion)> "Get Undiscord from OpenUserJS"
-
-  [brave_browser]: https://brave.com/download/
+CordWipe is distributed under the [MIT License](./LICENSE), including the original Undiscord copyright and required attribution notice. Contributions are welcome through pull requests. By submitting a contribution, you agree that it may be distributed under the repository's MIT license and attribution terms. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before making a change.

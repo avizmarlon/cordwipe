@@ -1,3 +1,5 @@
-# Search and Delete Delay
+# Rate limits and stopping
 
-This setting controls the initial delay for for searching messages. Sometimes the Discord API will quickly rate limit you, in this case setting the delays to something higher might help. This is especially true for the **Delete Delay**.
+CordWipe observes Discord's rate-limit responses and waits for the requested retry period. It does not bypass limits. A run may take longer or stop with an error if Discord rejects or blocks a request.
+
+Stopping prevents further work when the active request or wait is cancelled. Messages already deleted remain deleted. See [safety and privacy](../README.md#safety-and-privacy).
