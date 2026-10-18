@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conversation preview</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: #313338; color: #dbdee1; }
+    .topbar { height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 20px; background: #1e1f22; color: #f2f3f5; box-shadow: 0 1px 0 #17181a; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 650; letter-spacing: .2px; }
+    .brand-mark { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; color: #f4f2ff; background: linear-gradient(135deg, #7c72f4, #6055d8); font-size: 12px; }
+    .crumb { color: #949ba4; font-size: 13px; }
+    .top-spacer { flex: 1; }
+    .presence { color: #b5bac1; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+    .presence-dot { width: 8px; height: 8px; border-radius: 50%; background: #3ba55d; }
+    .layout { height: calc(100% - 52px); display: grid; grid-template-columns: 72px 236px minmax(0, 1fr); }
+    .servers { background: #1e1f22; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px 0; }
+    .server-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 15px; color: #dedbff; background: #363940; font-weight: 650; font-size: 13px; position: relative; }
+    .server-icon.selected { border-radius: 14px; background: #635bdb; color: white; }
+    .server-icon.selected::before { content: ""; position: absolute; left: -15px; width: 4px; height: 30px; border-radius: 0 4px 4px 0; background: #f2f3f5; }
+    .server-divider { width: 30px; height: 1px; background: #3f4147; margin: 2px 0; }
+    .channels { background: #2b2d31; display: flex; flex-direction: column; min-width: 0; padding: 18px 12px 12px; }
+    .workspace-name { display: flex; align-items: center; justify-content: space-between; padding: 0 8px 18px; color: #f2f3f5; font-weight: 650; font-size: 15px; }
+    .workspace-meta { font-size: 11px; font-weight: 500; color: #949ba4; }
+    .nav-item { color: #aeb4bd; padding: 8px 10px; border-radius: 6px; font-size: 13px; display: flex; gap: 10px; align-items: center; }
+    .nav-item.active { color: white; background: #404249; }
+    .nav-mark { width: 16px; text-align: center; color: #8c929c; font-weight: 700; }
+    .channel-label { color: #949ba4; margin: 24px 8px 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .channel-row { padding: 8px 10px; color: #b5bac1; border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 9px; }
+    .channel-row.current { color: #f2f3f5; background: #3f4147; }
+    .hash { font-size: 18px; color: #8d929b; }
+    .members-title { margin-top: auto; color: #949ba4; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 12px 8px 4px; }
+    .member { color: #b5bac1; font-size: 12px; padding: 7px 8px; display: flex; align-items: center; gap: 9px; }
+    .avatar { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 700; background: linear-gradient(135deg, #e88d78, #a54d63); }
+    .avatar.mira { background: linear-gradient(135deg, #84a8bd, #516783); }
+    .avatar.rowan { background: linear-gradient(135deg, #a68fd5, #65539c); }
+    .chat { display: flex; flex-direction: column; min-width: 0; position: relative; background: #313338; }
+    .channel-header { height: 64px; flex: 0 0 auto; display: flex; align-items: center; padding: 0 22px; gap: 10px; border-bottom: 1px solid #27292d; box-shadow: 0 1px 2px #0002; }
+    .channel-title { display: flex; align-items: center; gap: 10px; min-width: 0; color: #f2f3f5; font-weight: 650; font-size: 15px; }
+    .channel-title .hash { font-size: 22px; }
+    .channel-topic { color: #949ba4; font-size: 12px; font-weight: 400; margin-left: 8px; padding-left: 12px; border-left: 1px solid #45474e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .toolbar { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+    .toolbar-button { height: 32px; min-width: 34px; padding: 0 9px; border: 0; border-radius: 6px; color: #b5bac1; background: transparent; font: inherit; font-size: 12px; }
+    .toolbar-button:hover { background: #3a3c43; color: #f2f3f5; }
+    .fictional-label { position: absolute; top: 76px; right: 24px; border: 1px solid #4b4e57; border-radius: 999px; padding: 5px 10px; color: #b5bac1; background: #2b2d31; font-size: 10px; letter-spacing: .02em; }
+    .messages { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 38px 7vw 28px; }
+    .day-divider { align-self: center; width: 100%; display: flex; align-items: center; gap: 14px; color: #949ba4; font-size: 11px; margin: 2px 0 18px; }
+    .day-divider::before, .day-divider::after { content: ""; height: 1px; flex: 1; background: #45474e; }
+    .message { display: flex; gap: 14px; padding: 12px 10px; border-radius: 8px; }
+    .message:hover { background: #2e3035; }
+    .message-copy { min-width: 0; }
+    .message-head { display: flex; align-items: baseline; gap: 9px; margin-bottom: 4px; }
+    .name { color: #f2f3f5; font-size: 14px; font-weight: 650; }
+    .time { color: #949ba4; font-size: 10px; }
+    .body-copy { color: #dbdee1; font-size: 13px; line-height: 1.55; }
+    .body-copy .link { color: #8ab4f8; }
+    .attachment { margin-top: 12px; width: 354px; min-height: 82px; border: 1px solid #45474e; border-radius: 8px; background: linear-gradient(115deg, #343942, #3b3d46); display: flex; align-items: center; gap: 13px; padding: 12px; }
+    .file-icon { width: 42px; height: 48px; border-radius: 7px; display: grid; place-items: center; background: #6a65cb; color: white; font-size: 11px; font-weight: 750; letter-spacing: .04em; }
+    .file-copy { display: grid; gap: 5px; }
+    .file-title { color: #f2f3f5; font-size: 12px; font-weight: 600; }
+    .file-subtitle { color: #949ba4; font-size: 11px; }
+    .composer { margin: 0 7vw 24px; min-height: 48px; border-radius: 8px; background: #383a40; display: flex; align-items: center; gap: 12px; padding: 0 15px; color: #949ba4; font-size: 13px; }
+    .composer-plus { font-size: 22px; color: #b5bac1; }
+    .compose-hint { flex: 1; }
+    .compose-tool { color: #b5bac1; font-size: 15px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">C</span><span>Commonroom</span></div>
+    <span class="crumb">/</span>
+    <span class="crumb">Design notes</span>
+    <div class="top-spacer"></div>
+    <div class="presence"><span class="presence-dot"></span>3 teammates online</div>
+  </header>
+  <div id="app-mount" class="layout">
+    <aside class="servers" aria-label="Workspaces">
+      <div class="server-icon selected">CR</div>
+      <div class="server-icon">AT</div>
+      <div class="server-icon">PL</div>
+      <div class="server-divider"></div>
+      <div class="server-icon">+</div>
+    </aside>
+    <aside class="channels" aria-label="Channel list">
+      <div class="workspace-name"><span>Commonroom</span><span class="workspace-meta">⌄</span></div>
+      <div class="nav-item"><span class="nav-mark">◈</span>Overview</div>
+      <div class="nav-item"><span class="nav-mark">◷</span>Activity</div>
+      <div class="channel-label">Channels</div>
+      <div class="channel-row"><span class="hash">#</span>announcements</div>
+      <div class="channel-row current"><span class="hash">#</span>design-notes</div>
+      <div class="channel-row"><span class="hash">#</span>weekly-planning</div>
+      <div class="channel-row"><span class="hash">#</span>random</div>
+      <div class="members-title">Online — 3</div>
+      <div class="member"><span class="avatar mira">MC</span>Mira Chen</div>
+      <div class="member"><span class="avatar rowan">RP</span>Rowan Park</div>
+    </aside>
+    <main class="chat">
+      <section aria-label="Channel header" class="channel-header">
+        <div class="channel-title"><span class="hash">#</span><span>design-notes</span><span class="channel-topic">Product ideas, sketches, and weekly recaps</span></div>
+        <div class="toolbar" role="toolbar" aria-label="Channel actions">
+          <button class="toolbar-button" type="button" aria-label="Call">Call</button>
+          <button class="toolbar-button" type="button" aria-label="Pinned notes">Pinned</button>
+          <button class="toolbar-button" type="button" aria-label="Members">Members</button>
+        </div>
+      </section>
+      <span class="fictional-label">Fictional conversation</span>
+      <section class="messages" aria-label="Conversation">
+        <div class="day-divider">MONDAY, OCTOBER 12</div>
+        <article class="message">
+          <span class="avatar mira">MC</span>
+          <div class="message-copy">
+            <div class="message-head"><span class="name">Mira Chen</span><span class="time">10:24 AM</span></div>
+            <div class="body-copy">Morning! I pulled together the latest notes from our planning session. The smaller layout feels calmer, and the new spacing gives the thread room to breathe.</div>
+            <div class="attachment"><span class="file-icon">PDF</span><span class="file-copy"><span class="file-title">Design recap — October.pdf</span><span class="file-subtitle">2 pages · 184 KB</span></span></div>
+          </div>
+        </article>
+        <article class="message">
+          <span class="avatar rowan">RP</span>
+          <div class="message-copy">
+            <div class="message-head"><span class="name">Rowan Park</span><span class="time">10:31 AM</span></div>
+            <div class="body-copy">This reads much better. I added a few small copy edits here: <span class="link">commonroom.example/notes</span></div>
+          </div>
+        </article>
+        <article class="message">
+          <span class="avatar">AL</span>
+          <div class="message-copy">
+            <div class="message-head"><span class="name">Avery Lane</span><span class="time">10:39 AM</span></div>
+            <div class="body-copy">Nice work — let's keep this direction for the next review.</div>
+          </div>
+        </article>
+      </section>
+      <div class="composer"><span class="composer-plus">+</span><span class="compose-hint">Message #design-notes</span><span class="compose-tool">▧</span><span class="compose-tool">☺</span></div>
+    </main>
+  </div>
+</body>
+</html>

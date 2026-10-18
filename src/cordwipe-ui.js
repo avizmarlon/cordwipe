@@ -8,6 +8,7 @@ import mainCss from './ui/main.css';
 import dragCss from './ui/drag.css';
 import buttonHtml from './ui/cordwipe-button.html';
 import cordwipeTemplate from './ui/cordwipe.html';
+import cordwipeIcon from './ui/cordwipe-icon.svg';
 
 import CordWipeCore from './cordwipe-core.js';
 import mountLauncher from './utils/mountLauncher.js';
@@ -55,6 +56,7 @@ function initUI() {
     VERSION,
     HOME,
     WIKI,
+    CORDWIPE_ICON: cordwipeIcon,
   });
   ui.cordwipeWindow = createElm(cordwipeUI);
   document.body.appendChild(ui.cordwipeWindow);
@@ -62,8 +64,7 @@ function initUI() {
   // enable drag and resize on cordwipe window
   new Drag({ elm: ui.cordwipeWindow, moveHandle: $('.header') });
 
-  // create cordwipe Trash icon
-  ui.cordwipeBtn = createElm(buttonHtml);
+  ui.cordwipeBtn = createElm(replaceInterpolations(buttonHtml, { CORDWIPE_ICON: cordwipeIcon }));
   ui.cordwipeBtn.onclick = toggleWindow;
   mountLauncher(ui.cordwipeBtn, ui.cordwipeWindow);
 

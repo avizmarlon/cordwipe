@@ -91,9 +91,9 @@ const config = [
 
       banner(userScriptMetadataBlock),
 
-      // import html as string
+      // import UI markup as string
       string({
-        include: ['**/*.html'],
+        include: ['**/*.html', '**/*.svg'],
       }),
 
       // import css as string

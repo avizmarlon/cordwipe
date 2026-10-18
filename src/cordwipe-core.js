@@ -1,6 +1,5 @@
 // Derived from Undiscord, Copyright (c) 2019-2025 Victornpb and contributors.
 // https://github.com/victornpb/undiscord — original attribution retained.
-// DM history and cursor strategy informed by feelmypain/PurgeCord; see docs/investigation.md.
 import { log } from './utils/log.js';
 import { wait, ask, toSnowflake, queryString } from './utils/helpers.js';
 

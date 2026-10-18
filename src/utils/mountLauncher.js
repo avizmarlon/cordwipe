@@ -1,4 +1,4 @@
-// Selector strategy informed by PurgeCord and Undiscord PR #769.
+// Resolve the current visible toolbar again whenever Discord rebuilds its header.
 export function findToolbar(doc = document) {
   const root = doc.querySelector('#app-mount');
   if (!root) return null;
