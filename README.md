@@ -16,14 +16,14 @@ Use CordWipe in Discord's web app to clear messages from DMs, group DMs, channel
 
 No Tampermonkey or Violentmonkey needed.
 
-1. **[Download the public preview ZIP — v0.1.0-dev.1](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.1/cordwipe-extension-v0.1.0-dev.1.zip)** and extract it. No GitHub login is needed.
+1. **[Download the public preview ZIP — v0.1.0-dev.7](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.7/cordwipe-extension-v0.1.0-dev.7.zip)** and extract it. No GitHub login is needed.
 2. Open `chrome://extensions` (or `edge://extensions` in Edge).
 3. Turn on **Developer mode**, choose **Load unpacked**, and select the extracted folder containing `manifest.json`.
 4. Open [Discord in your browser](https://discord.com/channels/@me).
 
 The extension is currently distributed through [GitHub Releases](https://github.com/avizmarlon/cordwipe/releases). To update it, download the newer ZIP, replace the extracted files, and reload the extension and Discord page.
 
-**Public preview:** `0.1.0-dev.1`. The newer `0.1.0-dev.3` candidate has been tested and merged into the source on `main`, but is not included in that download. The usage and privacy behavior below describe the candidate; the public preview uses the older interface. No new release has been approved yet.
+**Public preview:** `0.1.0-dev.7` (Manifest V3 version `0.1.0.7`), including the approved CordWipe branding, filters and confirmation preview described below.
 
 ### Userscript — Firefox, Chrome, Edge, and others
 
@@ -38,7 +38,7 @@ Disable other Undiscord/CordWipe scripts or extensions to avoid duplicate button
 1. Open the DM or channel you want to clean and click the **trash icon**.
 2. Click **me** to read your account ID, then **current** for the server or channel. You can also enter IDs manually. To search a whole server, leave the channel field empty.
 3. Optionally filter by text, regex, attachments, links, pinned messages, or date/message range.
-4. Click **Find & review** to use your Discord session to search the selected scope. Check the preview and confirm deletion. Nothing is deleted before confirmation. The public preview labels this button **Delete**.
+4. Click **Find & review** to use your Discord session to search the selected scope. Check the preview and confirm deletion. Nothing is deleted before confirmation.
 
 CordWipe deletes **only messages from your signed-in account**. It supports one channel, multiple channels, or a whole server, and shows progress as it works. **Stop** cancels further work; a request already sent may still complete.
 

@@ -33,6 +33,8 @@ Works with Discord's website in Chrome and Edge, including PTB and Canary.
 
 Deletion is permanent, so review your selection carefully. Discord account automation may violate Discord's Terms of Service.
 
+Free and open source. Based on Undiscord by victornpb and contributors (MIT license). CordWipe is independent and is not affiliated with or endorsed by Discord.
+
 **Website**
 
 https://github.com/avizmarlon/cordwipe
@@ -95,21 +97,20 @@ CordWipe's content script runs only on `discord.com`, `ptb.discord.com`, and `ca
 3. For a safe functional review, use a test Discord account and messages created specifically for testing. Use **me** for Author ID and **current** for server/channel scope, or enter your own numeric IDs (server `@me` for a DM). Disable other CordWipe/Undiscord userscripts or extension copies first. Set a narrow test-message text filter. Click **Find & review** to search; inspect the result scope and sample preview; dismiss the confirmation to verify the non-deletion path. Do not confirm deletion of ordinary account messages.
 4. The extension uses Discord's existing session and sends API requests only to Discord. No third-party service, CordWipe account, or CordWipe backend is involved.
 
-## Submission checklist
+## Submission status and checklist
 
-- [ ] Use a final, reviewed ZIP generated from the exact source revision intended for submission; verify its manifest version and included files.
-- [x] Owner approved the violet chat-bubble trash-bin icon; it is used by the in-page launcher/header, 16/48/128 px package icons and the new promotional concepts.
-- [x] Owner selected concept 1 — Focus, with violet “Cord” and white “Wipe”, matching the panel header.
-- [ ] Review the final ZIP and matching promo/screenshot files before authorizing submission.
-- [ ] Select the matching 440×280 promotional PNG and the three 1280×800 screenshots. A marquee and video are optional; no concrete launch need currently justifies creating them.
-- [ ] Confirm name, short and detailed descriptions, English language, category, website, support, and privacy-policy URLs in the dashboard. The short description is imported from the manifest, not a separate store-only override.
-- [ ] Complete single-purpose, permission, remote-code, and user-data disclosures against the submitted ZIP. Certify Limited Use only if still accurate.
-- [ ] Ensure the public privacy-policy URL loads without sign-in and describes the exact submitted build's behavior.
-- [ ] Confirm the build does not load executable code remotely; inspect the packaged ZIP, not just source.
-- [ ] Complete a final test of install, Discord SPA entry, UI opening, search/review, cancel, rate-limit behavior, and confirmation using synthetic or disposable test data. The owner has independently reported a successful real Discord test; that does not replace a clean reviewer walkthrough.
-- [ ] Check Discord's current Terms of Service and applicable policy/legal requirements immediately before submission. Do not imply Discord endorsement.
-- [ ] Verify publisher contact email and two-step verification; choose distribution visibility/regions and applicable account declarations in the dashboard. Registration/payment are already completed according to the owner; no further payment is authorized.
-- [ ] Review Google's current submission, distribution, content-rating and asset requirements in the dashboard; obtain owner authorization before any upload or submission.
+Owner approved the final icon, Focus banner (violet Cord / white Wipe), all three real screenshots, PR #9 merge, a new GitHub release and Chrome Web Store upload/review submission on 2026-10-17. Public visibility is authorized, with automatic publication disabled after approval. No extra spending or other announcements are authorized.
+
+- [x] Existing automated suite and real disposable-message walkthrough reviewed; final checks recorded in [Issue #8](https://github.com/avizmarlon/cordwipe/issues/8).
+- [x] Selected final artwork and screenshot order below; alternatives removed from the current tree and recoverable through PR #9 history.
+- [x] Official image, privacy, local-processing disclosure, publishing and Discord self-bot guidance rechecked on 2026-10-17. Discord's policy prohibits normal-account automation and warns of account termination; the public documentation discloses this risk. No Discord endorsement is claimed.
+- [ ] Upload the exact release ZIP; confirm package version `0.1.0.7` and English language.
+- [ ] Fill listing, privacy declarations, permission justifications and reviewer instructions from this document against the live dashboard.
+- [ ] Verify account contact/2FA and applicable legal declarations. Ask the owner only for an unavailable personal/legal choice or authentication.
+- [ ] Select free/public distribution in all supported regions and **disable Publish automatically** in the review submission dialog. Do not publish immediately.
+- [ ] Confirm the actual review state and item URL; record them in Issue #8. No submission state is inferred from a successful upload.
+
+Google's [publishing guide](https://developer.chrome.com/docs/webstore/publish/) confirms deferred publication: uncheck automatic publishing when submitting for review. After approval, a staged submission can remain unpublished for up to 30 days; after that it returns to draft and needs review again.
 
 ## Official references
 
@@ -117,28 +118,28 @@ CordWipe's content script runs only on `discord.com`, `ptb.discord.com`, and `ca
 - [Chrome Web Store privacy fields](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)
 - [Chrome Web Store user data FAQ](https://developer.chrome.com/docs/webstore/program-policies/user-data-faq)
 - [Chrome Web Store Limited Use policy](https://developer.chrome.com/docs/webstore/program-policies/limited-use)
-- [Chrome Web Store listing guidance and current categories](https://developer.chrome.com/docs/webstore/best-practices)
+- [Chrome Web Store listing guidance and categories](https://developer.chrome.com/docs/webstore/best-practices)
 - [Manifest V3 remote-hosted code guidance](https://developer.chrome.com/docs/extensions/develop/migrate/remote-hosted-code)
 - [Manifest content scripts and execution worlds](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts)
+- [Discord automated-user-account policy](https://support.discord.com/hc/en-us/articles/115002192352-Automated-User-Accounts-Self-Bots)
 
-## Artwork and reproducibility
+## Approved artwork and reproducibility
 
-The owner selected [concept 1 — Focus](../images/store/banners/2026-10-17/01-focus-440x280.png), with violet “Cord” and white “Wipe”. The same wordmark colors and bold typographic treatment are used in the panel header. The [five concepts](../images/store/banners/2026-10-17/index.html) and [comparison sheet](../images/store/banners/2026-10-17/comparison.png) remain available. They use the approved violet chat-bin reference, also reconstructed as the shared in-page SVG. Each has a 440×280 RGB PNG and a matching 1540×980 source composition. The [prompt set](../images/store/banners/2026-10-17/prompts.json) records the built-in image-generation inputs and both colorways. Nothing has been submitted.
+Use these exact files, without another design round:
 
-The [wordmark comparison](../images/store/banners/2026-10-17/wordmark-comparison.png) retains the two colorways reviewed by the owner. Violet “Cord” and white “Wipe” is the final selection; colorways are not runtime settings. The README uses an 880×560 export of the selected banner, displayed at 640 pixels wide.
+- Store icon: [`extension/icons/icon128.png`](../extension/icons/icon128.png), 128×128 PNG with transparency; the 16/48 px versions are beside it. The [512 px master](../images/store/icons/approved-chat-bin.png) and [shared UI vector](../src/ui/cordwipe-icon.svg) remain available.
+- Small promotional tile: [Focus 440×280](../images/store/banners/2026-10-17/01-focus-440x280.png), violet Cord / white Wipe. The [1540×980 master](../images/store/banners/2026-10-17/sources/01-focus-1540x980.png), approved icon reference and [creation prompts](../images/store/banners/2026-10-17/prompts.json) remain. The [README hero](../images/cordwipe-banner.png) is an 880×560 export.
 
-The [earlier icon exploration and screenshots](../images/store/index.html) remain available. The old A–D icon/promo options are retained for comparison; they are not the current banner candidates. The approved violet mark is shared by the in-page UI and browser package icons. Screenshot PNGs are RGB 1280×800 with no alpha.
+Upload the three approved real Discord screenshots in this order (filenames retain their original capture numbering):
 
-The three [real Discord captures](../images/store/screenshots/real/) show the installed extension in Microsoft Edge, using the final wordmark. They are candidates for owner approval:
+1. [Panel with filters](../images/store/screenshots/real/02-filters.png).
+2. [Completed deletion](../images/store/screenshots/real/03-operation.png).
+3. [CordWipe icon integrated into Discord](../images/store/screenshots/real/01-launcher.png).
 
-1. [Channel launcher](../images/store/screenshots/real/01-launcher.png) in Discord's native toolbar.
-2. [Message filters](../images/store/screenshots/real/02-filters.png), including literal text and an exact regular expression.
-3. [Completed operation](../images/store/screenshots/real/03-operation.png) after the native confirmation: four disposable test messages deleted, zero failures, 24 skipped. The four differently worded test messages remained.
+All three are RGB 1280×800 PNGs, captured from installed MV3 in Edge. The owner approved them on 2026-10-17. They show an explicitly authorized disposable-message workflow: 4 deleted, 0 already absent, 0 failed, 24 skipped; four differently worded test messages remained. Names, avatars and identifying surroundings were anonymized locally before capture; private conversations, servers and unrelated messages were hidden. Native navigation/counters and the operation's confirmation, form values, counts and outcome were not fabricated. No credential or raw capture is included. The panel layout fix shown is included in source and ZIP.
 
-These captures used an explicitly authorized test conversation on the real Discord website. Names, avatars and identifying surroundings were anonymized locally before capture; private conversations, servers and unrelated messages were hidden. Discord's native home icon, notification counters and navigation remain. The web app did not expose the desktop app's back/forward controls, so none were added. Form values used by the operation, confirmation, counts and outcome were not changed for presentation. No credential or raw capture is included. The panel layout fix was applied to the installed UI during capture and is included in this candidate's source and ZIP.
+The separate [synthetic fixture screenshots](../images/store/screenshots/) and `test/fixtures/store-conversation.html` remain for reproducible offline testing. After `npm run build:extension`, `node test/store-assets.mjs` recreates only those synthetic screenshots using intercepted requests in disposable Chromium contexts. It never contacts a real account or recreates the real captures. `node test/store-artwork.mjs` validates final/source/test PNG dimensions, decoding, transparency and metadata without modifying the approved images.
 
-The separate [synthetic fixture screenshots](../images/store/screenshots/) remain useful for automated testing. They use intercepted API responses in disposable Chromium contexts. They are not real Discord screenshots. Neither capture set draws a replacement confirmation dialog or edits operation counts.
+Earlier concepts, galleries, duplicate exports and comparisons are recoverable in PR #9 history through commit `a8497ac`. Untracked local concepts and output files are preserved.
 
-After `npm run build:extension`, run `node test/store-assets.mjs` to reproduce only the synthetic screenshots. Real captures are retained separately and are never recreated by tests. Run `node test/store-artwork.mjs` to validate the banner and screenshot exports and regenerate the comparison sheets. Generated raster compositions are retained as source PNGs; the script exports their gallery, not new AI variants. These commands use disposable Chromium contexts and no personal browser profile.
-
-[Google's image specifications](https://developer.chrome.com/docs/webstore/images) require a PNG icon, at least one screenshot and a 440×280 small promo; the 1400×560 marquee is optional. Preserve the selected icon's transparency, visual padding and light/dark legibility when packaging it.
+[Google's image specifications](https://developer.chrome.com/docs/webstore/images) require a PNG icon, at least one screenshot and a 440×280 small promotional tile. Marquee and video are optional and are not part of this submission.

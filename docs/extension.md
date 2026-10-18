@@ -4,14 +4,14 @@ CordWipe runs in Discord's web app on Chrome and Edge 111 or later. It is not ye
 
 ## Install the ZIP
 
-1. Download the [public preview ZIP, v0.1.0-dev.1](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.1/cordwipe-extension-v0.1.0-dev.1.zip) from [GitHub Releases](https://github.com/avizmarlon/cordwipe/releases) and extract it to a folder you'll keep. No GitHub login is needed.
+1. Download the [public preview ZIP, v0.1.0-dev.7](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.7/cordwipe-extension-v0.1.0-dev.7.zip) from [GitHub Releases](https://github.com/avizmarlon/cordwipe/releases) and extract it to a folder you'll keep. No GitHub login is needed.
 2. Open `chrome://extensions` or `edge://extensions`.
 3. Enable **Developer mode** and click **Load unpacked**.
 4. Choose the folder containing `manifest.json` and open Discord.
 
 To update, replace the extracted files with a newer version, click **Reload** on the browser's Extensions page, and reload Discord.
 
-The newer `0.1.0-dev.3` candidate was tested and merged into `main`, but has not been released as an extension ZIP. The public ZIP still contains the older interface. To test an unreleased candidate, build its branch from source below; public installation does not depend on temporary CI artifacts.
+The public preview is `0.1.0-dev.7` (Manifest V3 version `0.1.0.7`). The versioned ZIP is built from the release commit on `main`; public installation does not depend on temporary CI artifacts.
 
 ## Build from source
 

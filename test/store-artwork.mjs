@@ -1,112 +1,57 @@
-// Export the owner-review artwork at the store's exact dimensions. No personal profile.
+// Validate approved store assets without regenerating or changing them.
 import assert from 'node:assert/strict';
-import { mkdir, readFile } from 'node:fs/promises';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
-const root = fileURLToPath(new URL('../images/store/', import.meta.url));
-const names = ['a-chat-bin', 'b-bubble-trash', 'c-erase-message', 'd-stack-delete'];
+const root = new URL('../', import.meta.url);
+const assets = [
+  ['extension/icons/icon16.png', 16, 16, 6],
+  ['extension/icons/icon48.png', 48, 48, 6],
+  ['extension/icons/icon128.png', 128, 128, 6],
+  ['images/store/icons/approved-chat-bin.png', 512, 512, 6],
+  ['images/store/banners/2026-10-17/01-focus-440x280.png', 440, 280, 2],
+  ['images/store/banners/2026-10-17/sources/01-focus-1540x980.png', 1540, 980, 2],
+  ['images/cordwipe-banner.png', 880, 560, 2],
+  ...['02-filters', '03-operation', '01-launcher'].map(name =>
+    [`images/store/screenshots/real/${name}.png`, 1280, 800, 2]),
+  ...['01-launcher', '02-filter-configuration', '03-operation-progress'].map(name =>
+    [`images/store/screenshots/${name}.png`, 1280, 800, 2]),
+];
+
 const browser = await chromium.launch({ headless: true });
 try {
-  await mkdir(path.join(root, 'promo'), { recursive: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 1000 }, deviceScaleFactor: 1 });
-  await context.route('**/*', route => route.request().url().startsWith('file:') ? route.continue() : route.abort('blockedbyclient'));
-  const page = await context.newPage();
-  const errors = [];
-  page.on('pageerror', error => errors.push(error.message));
-  const entry = pathToFileURL(path.join(root, 'index.html')).href;
-  for (const name of names) {
-    for (const size of [512, 128, 48, 16]) {
-      const png = await readFile(path.join(root, 'icons', `${name}${size === 512 ? '' : `-${size}`}.png`));
-      assert.equal(png.readUInt32BE(16), size);
-      assert.equal(png.readUInt32BE(20), size);
-      assert.equal(png[25], 6, 'Icons must have a real alpha channel');
-    }
-    await page.setViewportSize({ width: 440, height: 280 });
-    await page.goto(`${entry}?tile=${name[0]}`);
-    await page.locator('.tile img').evaluate(img => img.decode());
-    const source = await readFile(path.join(root, 'icons', `${name}.png`));
-    const cornerAlpha = await page.evaluate(async data => {
-      const img = new Image();
-      img.src = `data:image/png;base64,${data}`;
-      await img.decode();
-      const canvas = document.createElement('canvas');
-      canvas.width = canvas.height = 512;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0);
-      return ctx.getImageData(0, 0, 1, 1).data[3];
-    }, source.toString('base64'));
-    assert.equal(cornerAlpha, 0, 'Icon canvas corner must be transparent');
-    const output = path.join(root, 'promo', `${name}-440x280.png`);
-    await page.screenshot({ path: output });
-    const png = await readFile(output);
-    assert.equal(png.readUInt32BE(16), 440);
-    assert.equal(png.readUInt32BE(20), 280);
-    assert.equal(png[25], 2, 'Promo tiles must be RGB without alpha');
-  }
-  await page.setViewportSize({ width: 1280, height: 1000 });
-  await page.goto(entry);
-  await page.locator('img[src]').evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));
-  const box = await page.locator('#icon-options').boundingBox();
-  await page.screenshot({ path: path.join(root, 'icon-comparison.png'), clip: { x: 0, y: 0, width: 1280, height: Math.ceil(box.y + box.height + 24) } });
-  await page.locator('.promos').screenshot({ path: path.join(root, 'promo-comparison.png') });
-  const bannerRoot = path.join(root, 'banners', '2026-10-17');
-  for (const size of [16, 48, 128]) {
-    const approved = await readFile(path.join(root, 'icons', `approved-chat-bin-${size}.png`));
-    assert.equal(approved.readUInt32BE(16), size);
-    assert.equal(approved.readUInt32BE(20), size);
-    assert.equal(approved[25], 6, 'Approved package icons must retain transparency');
-    assert.deepEqual(await readFile(new URL(`../extension/icons/icon${size}.png`, import.meta.url)), approved);
-  }
-  const bannerManifest = JSON.parse(await readFile(path.join(bannerRoot, 'prompts.json'), 'utf8'));
-  for (const name of ['01-launcher', '02-filters', '03-operation']) {
-    const png = await readFile(path.join(root, 'screenshots', 'real', `${name}.png`));
-    assert.equal(png.readUInt32BE(16), 1280, `${name} screenshot width`);
-    assert.equal(png.readUInt32BE(20), 800, `${name} screenshot height`);
-    assert.equal(png[25], 2, `${name} screenshot must be RGB without alpha`);
-    // Allow image/color chunks, but reject textual and EXIF metadata.
+  const page = await browser.newPage();
+  await page.route('**/*', route => route.abort('blockedbyclient'));
+  for (const [file, width, height, colorType] of assets) {
+    const png = await readFile(new URL(file, root));
+    assert.deepEqual(png.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), file);
+    assert.equal(png.readUInt32BE(16), width, `${file} width`);
+    assert.equal(png.readUInt32BE(20), height, `${file} height`);
+    assert.equal(png[25], colorType, `${file} color/alpha`);
     let offset = 8;
     while (offset < png.length) {
       const length = png.readUInt32BE(offset);
       const type = png.toString('ascii', offset + 4, offset + 8);
-      assert.ok(['IHDR', 'IDAT', 'IEND', 'sRGB', 'iCCP', 'gAMA', 'cHRM', 'pHYs'].includes(type), `Unexpected PNG metadata: ${type}`);
+      assert.ok(['IHDR', 'IDAT', 'IEND', 'sRGB', 'iCCP', 'gAMA', 'cHRM', 'pHYs'].includes(type), `${file}: unexpected metadata ${type}`);
       offset += length + 12;
     }
+    assert.equal(offset, png.length, `${file} chunk boundaries`);
+    const decoded = await page.evaluate(async data => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${data}`;
+      await img.decode();
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      return { width: img.width, height: img.height, cornerAlpha: ctx.getImageData(0, 0, 1, 1).data[3] };
+    }, png.toString('base64'));
+    assert.equal(decoded.width, width, `${file} decoded width`);
+    assert.equal(decoded.height, height, `${file} decoded height`);
+    if (colorType === 6) assert.equal(decoded.cornerAlpha, 0, `${file} transparent corner`);
   }
-  for (const { id } of bannerManifest.concepts) {
-    for (const [width, height, file] of [
-      [440, 280, `${id}-440x280.png`],
-      [1540, 980, `sources/${id}-1540x980.png`],
-    ]) {
-      const png = await readFile(path.join(bannerRoot, file));
-      assert.equal(png.readUInt32BE(16), width, `${file} width`);
-      assert.equal(png.readUInt32BE(20), height, `${file} height`);
-      assert.equal(png[25], 2, `${file} must be RGB without alpha`);
-    }
-  }
-  for (const [width, height, file] of [
-    [440, 280, path.join(bannerRoot, bannerManifest.alternative_wordmark.tile)],
-    [1540, 980, path.join(bannerRoot, bannerManifest.alternative_wordmark.source)],
-    [880, 560, path.join(root, '..', 'cordwipe-banner.png')],
-  ]) {
-    const png = await readFile(file);
-    assert.equal(png.readUInt32BE(16), width, `${file} width`);
-    assert.equal(png.readUInt32BE(20), height, `${file} height`);
-    assert.equal(png[25], 2, `${file} must be RGB without alpha`);
-  }
-  await page.setViewportSize({ width: 1000, height: 1500 });
-  await page.goto(pathToFileURL(path.join(bannerRoot, 'index.html')).href);
-  await page.locator('img').evaluateAll(imgs => Promise.all(imgs.map(img => img.decode())));
-  assert.equal(await page.locator('.tile').count(), 5);
-  for (const tile of await page.locator('.tile').all()) {
-    const box = await tile.boundingBox();
-    assert.equal(box.width, 440);
-    assert.equal(box.height, 280);
-  }
-  await page.screenshot({ path: path.join(bannerRoot, 'comparison.png'), fullPage: true });
-  assert.deepEqual(errors, []);
-  console.log('Validated transparent package icons, 16 earlier icon exports, four earlier tiles, five current banners/sources, inverse wordmark exports, README hero, and comparison sheets.');
+  console.log(`Validated ${assets.length} approved/source/test PNGs: dimensions, decoding, alpha and metadata.`);
 } finally {
   await browser.close();
 }
