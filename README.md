@@ -4,6 +4,7 @@
   <img src="images/cordwipe-banner.png" width="640" alt="CordWipe — delete your own Discord messages">
 </p>
 
+[![Available in the Chrome Web Store](https://img.shields.io/badge/Install-Chrome_Web_Store-473ffa)](https://chromewebstore.google.com/detail/cordwipe/fgmbglcjaophmpokedeegmdlmfkcjeda)
 [![Get it on Greasy Fork](https://img.shields.io/badge/Get_it_on-Greasy_Fork-670000)](https://greasyfork.org/en/scripts/600774-cordwipe)
 
 **Delete your own Discord messages in bulk.** Free, open source, and based on [Undiscord](https://github.com/victornpb/undiscord).
@@ -16,12 +17,23 @@ Use CordWipe in Discord's web app to clear messages from DMs, group DMs, channel
 
 No Tampermonkey or Violentmonkey needed.
 
+1. **[Install CordWipe from the Chrome Web Store](https://chromewebstore.google.com/detail/cordwipe/fgmbglcjaophmpokedeegmdlmfkcjeda)** and confirm your browser's installation prompt.
+2. Open or refresh [Discord in your browser](https://discord.com/channels/@me).
+3. Click the **CordWipe trash icon** in the Discord channel toolbar to open the panel.
+
+In Edge, allow extensions from other stores if prompted. Store installations receive updates automatically.
+
+<details>
+<summary>Alternative: install manually from a ZIP</summary>
+
 1. **[Download CordWipe for Chrome/Edge](https://github.com/avizmarlon/cordwipe/releases/download/v0.1.0-dev.7/cordwipe-extension-v0.1.0-dev.7.zip)** and extract the ZIP.
 2. Open `chrome://extensions` (or `edge://extensions` in Edge).
 3. Turn on **Developer mode**, choose **Load unpacked**, and select the extracted folder containing `manifest.json`.
 4. Open [Discord in your browser](https://discord.com/channels/@me).
 
 To update, [download the latest ZIP](https://github.com/avizmarlon/cordwipe/releases), replace the extracted files, and reload the extension and Discord.
+
+</details>
 
 ### Userscript — Firefox, Chrome, Edge, and others
 
