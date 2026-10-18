@@ -90,10 +90,12 @@
 }
 
 #cordwipe .window-body {
-    height: calc(100% - 48px);
+    flex: 1;
+    min-height: 0;
 }
 
 #cordwipe .sidebar {
+    box-sizing: border-box;
     overflow: hidden scroll;
     overflow-y: auto;
     width: 270px;

@@ -99,7 +99,7 @@ CordWipe's content script runs only on `discord.com`, `ptb.discord.com`, and `ca
 
 - [ ] Use a final, reviewed ZIP generated from the exact source revision intended for submission; verify its manifest version and included files.
 - [x] Owner approved the violet chat-bubble trash-bin icon; it is used by the in-page launcher/header, 16/48/128 px package icons and the new promotional concepts.
-- [x] Owner selected concept 1 — Focus. Its wordmark uses white “Cord” and violet “Wipe”, matching the panel header.
+- [x] Owner selected concept 1 — Focus, with violet “Cord” and white “Wipe”, matching the panel header.
 - [ ] Review the final ZIP and matching promo/screenshot files before authorizing submission.
 - [ ] Select the matching 440×280 promotional PNG and the three 1280×800 screenshots. A marquee and video are optional; no concrete launch need currently justifies creating them.
 - [ ] Confirm name, short and detailed descriptions, English language, category, website, support, and privacy-policy URLs in the dashboard. The short description is imported from the manifest, not a separate store-only override.
@@ -123,14 +123,22 @@ CordWipe's content script runs only on `discord.com`, `ptb.discord.com`, and `ca
 
 ## Artwork and reproducibility
 
-The owner selected [concept 1 — Focus](../images/store/banners/2026-10-17/01-focus-440x280.png), with white “Cord” and violet “Wipe”. The same wordmark colors and bold typographic treatment are used in the panel header. The [five concepts](../images/store/banners/2026-10-17/index.html) and [comparison sheet](../images/store/banners/2026-10-17/comparison.png) remain available. They use the approved violet chat-bin reference, also reconstructed as the shared in-page SVG. Each has a 440×280 RGB PNG and a matching 1540×980 source composition. The [prompt set](../images/store/banners/2026-10-17/prompts.json) records the built-in image-generation inputs and the selected banner's color adjustment. Nothing has been submitted.
+The owner selected [concept 1 — Focus](../images/store/banners/2026-10-17/01-focus-440x280.png), with violet “Cord” and white “Wipe”. The same wordmark colors and bold typographic treatment are used in the panel header. The [five concepts](../images/store/banners/2026-10-17/index.html) and [comparison sheet](../images/store/banners/2026-10-17/comparison.png) remain available. They use the approved violet chat-bin reference, also reconstructed as the shared in-page SVG. Each has a 440×280 RGB PNG and a matching 1540×980 source composition. The [prompt set](../images/store/banners/2026-10-17/prompts.json) records the built-in image-generation inputs and both colorways. Nothing has been submitted.
 
-A [reversed wordmark preview](../images/store/banners/2026-10-17/wordmark-comparison.png) shows violet “Cord” and white “Wipe” in the banner and actual installed-extension header. It is an alternative for owner comparison, not a runtime setting or a change to the current candidate. The README uses an 880×560 export of the current banner, displayed at 640 pixels wide.
+The [wordmark comparison](../images/store/banners/2026-10-17/wordmark-comparison.png) retains the two colorways reviewed by the owner. Violet “Cord” and white “Wipe” is the final selection; colorways are not runtime settings. The README uses an 880×560 export of the selected banner, displayed at 640 pixels wide.
 
 The [earlier icon exploration and screenshots](../images/store/index.html) remain available. The old A–D icon/promo options are retained for comparison; they are not the current banner candidates. The approved violet mark is shared by the in-page UI and browser package icons. Screenshot PNGs are RGB 1280×800 with no alpha.
 
-The screenshots show the installed extension's actual UI over a fictional conversation fixture, not a captured personal Discord account. Search and deletion responses are intercepted mocks. The operation-progress capture follows the real native confirmation and one simulated successful deletion; counts are not edited into the page. The native confirmation itself is not drawn as an invented in-page modal.
+The three [real Discord captures](../images/store/screenshots/real/) show the installed extension in Microsoft Edge, using the final wordmark. They are candidates for owner approval:
 
-After `npm run build:extension`, run `node test/store-assets.mjs` to reproduce screenshots. Run `node test/store-artwork.mjs` to validate the current banner exports and regenerate their comparison sheet, as well as the earlier icon/promo comparisons. Generated raster compositions are retained as source PNGs; the script exports their gallery, not new AI variants. These commands use disposable Chromium contexts and no personal browser profile.
+1. [Channel launcher](../images/store/screenshots/real/01-launcher.png) in Discord's native toolbar.
+2. [Message filters](../images/store/screenshots/real/02-filters.png), including literal text and an exact regular expression.
+3. [Completed operation](../images/store/screenshots/real/03-operation.png) after the native confirmation: four disposable test messages deleted, zero failures, 24 skipped. The four differently worded test messages remained.
+
+These captures used an explicitly authorized test conversation on the real Discord website. Names, avatars and identifying surroundings were anonymized locally before capture; private conversations, servers and unrelated messages were hidden. Discord's native home icon, notification counters and navigation remain. The web app did not expose the desktop app's back/forward controls, so none were added. Form values used by the operation, confirmation, counts and outcome were not changed for presentation. No credential or raw capture is included. The panel layout fix was applied to the installed UI during capture and is included in this candidate's source and ZIP.
+
+The separate [synthetic fixture screenshots](../images/store/screenshots/) remain useful for automated testing. They use intercepted API responses in disposable Chromium contexts. They are not real Discord screenshots. Neither capture set draws a replacement confirmation dialog or edits operation counts.
+
+After `npm run build:extension`, run `node test/store-assets.mjs` to reproduce only the synthetic screenshots. Real captures are retained separately and are never recreated by tests. Run `node test/store-artwork.mjs` to validate the banner and screenshot exports and regenerate the comparison sheets. Generated raster compositions are retained as source PNGs; the script exports their gallery, not new AI variants. These commands use disposable Chromium contexts and no personal browser profile.
 
 [Google's image specifications](https://developer.chrome.com/docs/webstore/images) require a PNG icon, at least one screenshot and a 440×280 small promo; the 1400×560 marquee is optional. Preserve the selected icon's transparency, visual padding and light/dark legibility when packaging it.

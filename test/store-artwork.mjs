@@ -60,6 +60,20 @@ try {
     assert.deepEqual(await readFile(new URL(`../extension/icons/icon${size}.png`, import.meta.url)), approved);
   }
   const bannerManifest = JSON.parse(await readFile(path.join(bannerRoot, 'prompts.json'), 'utf8'));
+  for (const name of ['01-launcher', '02-filters', '03-operation']) {
+    const png = await readFile(path.join(root, 'screenshots', 'real', `${name}.png`));
+    assert.equal(png.readUInt32BE(16), 1280, `${name} screenshot width`);
+    assert.equal(png.readUInt32BE(20), 800, `${name} screenshot height`);
+    assert.equal(png[25], 2, `${name} screenshot must be RGB without alpha`);
+    // Allow image/color chunks, but reject textual and EXIF metadata.
+    let offset = 8;
+    while (offset < png.length) {
+      const length = png.readUInt32BE(offset);
+      const type = png.toString('ascii', offset + 4, offset + 8);
+      assert.ok(['IHDR', 'IDAT', 'IEND', 'sRGB', 'iCCP', 'gAMA', 'cHRM', 'pHYs'].includes(type), `Unexpected PNG metadata: ${type}`);
+      offset += length + 12;
+    }
+  }
   for (const { id } of bannerManifest.concepts) {
     for (const [width, height, file] of [
       [440, 280, `${id}-440x280.png`],

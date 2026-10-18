@@ -2,10 +2,10 @@
   "generator": "Built-in image_gen",
   "approved_icon_reference": "approved-icon.png",
   "approved_ui_vector": "../../../../src/ui/cordwipe-icon.svg",
-  "status": "Owner selected 01-focus; white Cord and violet Wipe adjustment requested and applied. Not submitted.",
+  "status": "Owner approved Focus with violet Cord and white Wipe; applied to banner, README and panel. Not submitted.",
   "selected": "01-focus",
   "alternative_wordmark": {
-    "status": "Preview only; not selected or applied to the distributed UI.",
+    "status": "Owner selected this colorway; applied to the distributed UI.",
     "tile": "01-focus-cord-violet-440x280.png",
     "source": "sources/01-focus-cord-violet-1540x980.png",
     "prompt": "Edit target: the provided CordWipe banner. Produce an alternative wordmark colorway ONLY: 'Cord' should be vivid blue-violet matching the trash-bin front, approximately #473ffa; 'Wipe' should be white. This reverses the current white Cord / violet Wipe colorway. Preserve the exact bold geometric letterforms, all wordmark position, size and spacing, tagline 'Delete your own Discord messages', approved icon, dark background, outlines and layout. No new text or elements, no redesign. Preserve full 11:7 landscape composition. Change only those two parts' text colors."
@@ -14,7 +14,8 @@
     "prompt": "Edit target: the provided CordWipe promotional banner. Change ONLY the color of the letters 'Wipe' in 'CordWipe' from white to the exact same vivid blue-violet color as the purple trash-bin/chat icon front (approximately #473ffa). Keep 'Cord' white. Preserve the existing bold geometric letterforms, wordmark size and placement, all spacing, tagline 'Delete your own Discord messages', approved icon, outlines, background and composition unchanged. No new text or objects. Keep the full original 11:7 landscape composition, with no cropping. This is a precise text-color edit to the owner-approved design, not a redesign.",
     "output": "sources/01-focus-1540x980.png",
     "readme_export": "../../../cordwipe-banner.png",
-    "ui_color": "#473ffa"
+    "ui_color": "#473ffa",
+    "status": "Superseded colorway retained as 01-focus-wipe-violet-440x280.png."
   },
   "export": {
     "format": "PNG RGB, opaque",

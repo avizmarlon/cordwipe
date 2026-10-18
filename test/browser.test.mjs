@@ -125,6 +125,25 @@ test('panel and launcher recover if the app replaces the document body', async t
   assert.equal(await page.locator('#cordwipe').isVisible(), true);
 });
 
+test('focusing filters scrolls the sidebar without clipping the panel header', async t => {
+  const page = await fixture(t);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await open(page);
+  await page.locator('#cordwipe summary').filter({ hasText: 'Filter' }).click();
+  await page.locator('#cordwipe #pattern').fill('^test$');
+  await page.locator('#cordwipe summary').filter({ hasText: 'Date interval' }).click();
+  await page.locator('#cordwipe #maxDate').fill('2026-10-17T20:50');
+  const layout = await page.locator('#cordwipe').evaluate(panel => {
+    const root = panel.getBoundingClientRect();
+    const header = panel.querySelector('.header').getBoundingClientRect();
+    return { rootTop: root.top, headerTop: header.top, scroll: panel.scrollTop,
+      sidebarScroll: panel.querySelector('.sidebar').scrollTop };
+  });
+  assert.equal(layout.scroll, 0);
+  assert.ok(layout.headerTop >= layout.rootTop);
+  assert.ok(layout.sidebarScroll > 0);
+});
+
 test('invalid pattern and conflicting intervals perform no API requests', async t => {
   const page = await fixture(t);
   await open(page);

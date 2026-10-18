@@ -2,7 +2,7 @@
 #cordwipe.browser {
     box-shadow: var(--shadow-border), var(--shadow-high);
         border: 1px solid var(--border-subtle);
-    overflow: hidden;
+    overflow: clip;
 }
 
 #cordwipe.container,
@@ -43,7 +43,7 @@
     font-weight: 900;
     font-family: "Arial Black", Arial, sans-serif;
     letter-spacing: -1px;
-    color: #f8f9ff;
+    color: #473ffa;
     flex-shrink: 0;
     margin-top: 0;
     margin-bottom: 0;
@@ -51,7 +51,7 @@
 }
 
 #cordwipe .brand-wordmark span {
-    color: #473ffa;
+    color: #f8f9ff;
 }
 
 #cordwipe .spacer {
