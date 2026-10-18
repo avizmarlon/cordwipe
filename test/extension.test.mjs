@@ -37,7 +37,12 @@ test('MV3 manifest only targets Discord and requests no privileged extension API
   const bundle = await readFile(new URL('dist/extension/content.js', root), 'utf8');
   const userscript = await readFile(new URL('cordwipe.user.js', root), 'utf8');
   assert.equal(bundle, userscript, 'Extension and userscript must share the same compiled logic');
-  assert.match(bundle, /Copyright \(c\) 2019-2025 Victornpb and contributors/);
+  const license = await readFile(new URL('LICENSE', root), 'utf8');
+  assert.match(license, /Copyright \(c\) 2019-2025 Victornpb and contributors/);
+  assert.match(license, /Copyright \(c\) 2026 avizmarlon and CordWipe contributors \(CordWipe modifications\)/);
+  assert.match(license, /Derivatives must keep attribution comments to the original project in the code readme and license\./);
+  assert.ok(bundle.replace(/\r\n/g, '\n').includes(license.replace(/\r\n/g, '\n').trim()),
+    'Both distributions must embed the complete current legal notice');
 });
 
 test('ZIP installs from its root and contains exactly the built local assets', async () => {
@@ -47,6 +52,8 @@ test('ZIP installs from its root and contains exactly the built local assets', a
     const expected = await readFile(new URL(`dist/extension/${path}`, root));
     assert.deepEqual(Buffer.from(archive[path]), expected, path);
   }
+  assert.deepEqual(Buffer.from(archive.LICENSE), await readFile(new URL('LICENSE', root)),
+    'The ZIP must include the repository license with both projects credited');
 });
 
 test('installed MV3 extension handles SPA entry and deletes only confirmed synthetic matching messages', async t => {

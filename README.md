@@ -69,6 +69,8 @@ Found a bug or have an idea? [Open an issue](https://github.com/avizmarlon/cordw
 
 CordWipe is based on **[Undiscord](https://github.com/victornpb/undiscord)** by [victornpb](https://github.com/victornpb) and its contributors.
 
+CordWipe modifications are copyright (c) 2026 [avizmarlon](https://github.com/avizmarlon) and CordWipe contributors.
+
 Licensed under [MIT](LICENSE), with the original authors' copyright and attribution preserved.
 
 Want to contribute? See [CONTRIBUTING.md](CONTRIBUTING.md). Developers can also [build the extension from source](docs/extension.md).
